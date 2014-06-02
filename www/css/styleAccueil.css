@@ -1,0 +1,405 @@
+#loginForm {
+	margin: 60px auto 50px;
+	width:60%;
+}
+
+#blockServer {
+	position:absolute;
+	top:16px;
+	right:15px;
+	line-height: 1em;
+}
+
+label[for=server] {
+	text-decoration: underline;
+}
+
+#server{
+	font-family: "ExoSB";
+}
+
+.blockInput{
+	width:66%;
+	margin-bottom:35px;
+}
+
+#blockLogin {
+	padding-left:30px;
+}
+
+#blockLogin label {
+	display: inline-block;
+	width:24%;
+}
+
+#blockBtn {
+	margin:30px 5% 0 0;
+	margin: 30px 		 calc(10% - 23px) 0 0;
+  	margin: 30px -webkit-calc(10% - 23px) 0 0;
+  	margin: 30px    -moz-calc(10% - 23px) 0 0;
+  	margin: 30px     -ms-calc(10% - 23px) 0 0;
+  	margin: 30px      -o-calc(10% - 23px) 0 0;
+	padding-bottom:30px;
+	text-align: right;
+}
+
+#explications {
+	padding:0 20px 10px;
+	font-family: "ExoSB";
+}
+
+#explications p {
+	margin-bottom: 40px;
+}
+
+.blockBtn{
+	margin-right: 14px;
+}
+
+
+
+
+
+
+
+/*Confirmation inscription*/
+.message > p {
+	margin-left :80px;
+	margin-right :80px;
+	padding: 115px 0 150px;
+	text-align: center;
+}
+
+.message > div {
+	position:absolute;
+	bottom:5px;
+	right:5px;
+}
+
+
+/* Forgot pwd */
+#blockBtn.forgot_pwd .blockBtn:last-child {
+	position:absolute;
+	bottom:30px;
+	left:30px;
+}
+
+
+
+
+
+/*PLAN DU SITE*/
+#plan > div {
+	width:			calc(100% - 60px);
+  	width: -webkit-calc(100% - 60px);
+  	width:    -moz-calc(100% - 60px);
+  	width:     -ms-calc(100% - 60px);
+  	width:      -o-calc(100% - 60px);
+	margin: 0 auto;
+	color:white;
+}
+
+#plan > div h3 {
+	color:rgb(0,153,255);
+	font-family: "ExoSB";
+	font-size:24px;
+	padding:15px 15px 0 15px;
+}
+
+#plan > div p {
+	font-size:16px;
+	padding:0 15px;
+}
+
+#plan > div > ul > li {
+	margin-bottom: 15px;
+	background-color: #333333;
+			border-radius:7px;
+	-webkit-border-radius: 7px;
+	   -moz-border-radius: 7px;
+	    -ms-border-radius: 7px;
+	     -o-border-radius: 7px;
+	overflow: hidden;
+	border:2px solid #333333;
+}
+
+#plan > div > ul {
+	padding-bottom: 15px;
+}
+
+#plan > div > ul > li > ul {
+	background-color: rgb(0,153,255);
+	margin-top: 15px;
+}
+
+
+#plan > div > ul > li > ul > li a {
+	display:block;
+	padding: 7px 15px 7px 30px;
+}
+
+#plan > div > ul > li > ul > li a:hover {
+	background-color: #333333;
+}
+
+#plan span.minB,
+#plan span.min
+ {
+	display:inline-block;
+}
+
+#plan span:last-child {
+	display:inline-block;
+	padding-left:5px;
+	vertical-align: -5px;
+}
+
+
+
+
+
+
+
+
+
+
+/*ABOUT / */
+.informations {
+	counter-reset: counth3; /* on initialise et nomme un compteur */
+	padding-bottom:30px;
+	margin-bottom: 60px;
+}
+
+.informations header p {
+	margin:15px;
+}
+
+.informations > div h3 {
+	font-family: "ExoB";
+	font-size: 36px;
+	margin:30px;
+	counter-increment: counth3; /* on incrémente le compteur à chaque nouveau li */
+}
+
+.informations > div h3:before {
+	content:counter(counth3); /* on affiche le compteur */
+	font-family: "ExoB";
+
+    padding: 4px 20px 2px;
+   	margin-right: 15px;
+    vertical-align: top;
+    background: #333;
+    		border-radius: 60px;
+	-webkit-border-radius: 60px;
+	   -moz-border-radius: 60px;
+	    -ms-border-radius: 60px;
+	     -o-border-radius: 60px;
+    font-weight: bold;
+    font-size: 0.8em;
+    color: white;		
+}
+
+.informations > div {
+	counter-reset: counth4;
+}
+
+.informations > div h4 {
+	font-family: "ExoSB";
+	font-size: 32px;
+	margin:15px 60px;
+	counter-increment: counth4;
+}
+
+.informations > div h4:before {
+	content:counter(counth3) "." counter(counth4)  ; /* on affiche le compteur */
+	font-family: "ExoB";
+
+    padding: 4px 20px 2px;
+   	margin-right: 15px;
+    vertical-align: top;
+    background: rgb(0,153,255);
+    		border-radius: 60px;
+	-webkit-border-radius: 60px;
+	   -moz-border-radius: 60px;
+	    -ms-border-radius: 60px;
+	     -o-border-radius: 60px;
+    font-weight: bold;
+    font-size: 0.8em;
+    color: white;		
+}
+
+.informations > div p {
+	font-family: "ExoSB";
+	margin:10px 90px;
+}
+
+.informations > div h4:not(:nth-of-type(1)) {
+	margin-top: 45px;
+}
+
+.informations > div:not(:nth-of-type(1)) h3 {
+	margin-top:90px;
+}
+
+.informations ul {
+	margin-left:120px;
+}
+
+.informations li:before {
+	content:"→ ";
+}
+
+
+
+/*ABUS / BUGS */
+
+#blockForm {
+	width : 80%;
+	margin:0 auto;
+	text-align: left;
+}
+
+#blockForm fieldset {
+	width:100%;
+	margin:0;
+	padding:0;
+	border:none;
+	padding-bottom:10px;
+	margin-bottom:30px;
+	border-bottom:1px solid #333333;
+}
+
+#blockForm fieldset > legend{
+	display:none;
+}
+
+#nameForm label {
+	display: inline-block;
+	width:130px;
+}
+
+#nameForm .blockInput {
+	width:auto;
+	width:			calc(100% - 137px);
+  	width: -webkit-calc(100% - 137px);
+  	width:    -moz-calc(100% - 137px);
+  	width:     -ms-calc(100% - 137px);
+  	width:      -o-calc(100% - 137px);
+	min-width: 130px;
+}
+
+
+#dateForm label {
+	display: inline-block;
+	width:210px;
+}
+
+#dateForm .blockInput {
+	width:auto;
+	width:			calc(100% - 217px);
+  	width: -webkit-calc(100% - 217px);
+  	width:    -moz-calc(100% - 217px);
+  	width:     -ms-calc(100% - 217px);
+  	width:      -o-calc(100% - 217px);
+	min-width: 130px;
+}
+
+#horaireForm label {
+	display: inline-block;
+	width:70px;
+}
+
+#horaireForm .blockInput {
+	width:100px;
+}
+
+#resultHoraire {
+	float:right;
+	background-color: rgb(0,153,255);
+			border-radius: 60px;
+	-webkit-border-radius: 60px;
+	   -moz-border-radius: 60px;
+	    -ms-border-radius: 60px;
+	     -o-border-radius: 60px;
+	padding:4px 15px 2px;
+}
+
+/*Formatage du range*/
+input[type='range'] {
+	width:auto;
+	width:			calc(100% - 77px - 107px);
+  	width: -webkit-calc(100% - 77px - 107px);
+  	width:    -moz-calc(100% - 77px - 107px);
+  	width:     -ms-calc(100% - 77px - 107px);
+  	width:      -o-calc(100% - 77px - 107px);
+
+	-webkit-appearance: none;
+	/*border-radius: 5px;*/
+	/*box-shadow: inset 0 0 5px #333;*/
+	background-color: #0099ff;
+	height: 4px;
+	vertical-align: middle;
+	border:none;
+	cursor:pointer;
+}
+
+input[type='range']::-moz-range-track {
+	-moz-appearance: none;
+	/*border-radius: 5px;*/
+	/*box-shadow: inset 0 0 5px #333;*/
+	background-color: #0099ff;
+	height: 4px;
+	border:none;
+}
+
+input[type='range']::-webkit-slider-thumb {
+	-webkit-appearance: none !important;
+			border-radius: 18px;
+	-webkit-border-radius: 18px;
+	   
+	background-color: #FFF;
+	box-shadow:inset 0 0 20px rgba(0,0,0,1);
+   	-webkit-box-shadow: inset 0 0 20px rgba(0,0,0,1);
+	border: none;
+	height: 18px;
+	width: 18px;
+}
+
+input[type='range']::-moz-range-thumb {
+	-moz-appearance: none;
+	border-radius: 18px;
+	-moz-border-radius: 18px;
+	background-color: #FFF;
+	box-shadow:inset 0 0 20px rgba(0,0,0,1);
+	   -moz-box-shadow: inset 0 0 20px rgba(0,0,0,1);
+	border: none;
+	height: 18px;
+	width: 18px;
+}
+
+
+
+
+textarea.input {
+	width:100%;
+	height:100%;
+	border:1px solid #cccccc;
+	overflow: auto;
+    resize:none;
+}
+
+
+#blockMessage .blockInput {
+	width:100%;
+	height:250px;
+	margin: 0 auto 10px;
+}
+
+div.ui-datepicker {
+	font-size: 15px;
+}
+
+
+
+
+

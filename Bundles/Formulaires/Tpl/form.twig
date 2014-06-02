@@ -1,0 +1,15 @@
+<div id='{{ name }}-form' class='container-form'>
+	{% if label is defined %}
+		<label id='{{ name }}-label' class='label-form' for='{{ name }}'>{{ label|capitalize }}{{ required|raw }} : </label>
+	{% endif %}
+	{{ input.preInput|raw }}{{ input.valInput }}{{ input.postInput|raw }}
+	<span id='{{ name }}-error' class='error-form'>
+		{{ errors|raw }}
+	</span>
+	{% if description is defined %}
+		<p id='{{ name }}-desc' class='desc-form'>{{ description }}</p>
+	{% endif %}
+</div>
+
+
+

@@ -1,0 +1,51 @@
+{% extends "main.twig" %}
+
+{% block stylesheetBase %}
+	{{ parent() }}
+   	<link rel="stylesheet" type="text/css" href="css/styleAccueil.css">
+{% endblock %}
+
+{% block contenu %} 
+	<section>	
+
+		<article id="loginForm" class="cadre">
+			<header>
+				<h2>{{ dico('title_login') }} :</h2>
+			</header>
+			<div>
+				<form method="POST" action="{{ href }}">
+					<div id="blockServer">
+						{{ form('Login', 'server') }}
+					</div>
+					<div id="blockLogin">
+						{{ form('Login', 'login') }}
+						{{ form('Login', 'pwd') }}
+					</div>
+					<div id="blockBtn">
+						<input type="submit" class="btn signIn" name="signIn" value="{{ dico('sign_in') }}" >
+						<a href="{{ url.inscription }}" class="btn signUp">{{ dico('sign_up') }}</a>
+						<a href="{{ url.forgot_pwd }}" class="btn">{{ dico('forgot_pwd') }} ?</a>
+					</div>
+				</form>
+			</div>
+
+		</article>
+
+
+
+
+
+
+
+
+
+		<article id="explications">
+    {% for desc in DESC_PAGE %}
+        	<p>{{ desc }}</p>
+    {% endfor %}
+
+		</article>
+	</section>
+
+
+{% endblock %}

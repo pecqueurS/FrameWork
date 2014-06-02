@@ -1,0 +1,50 @@
+#empécher les internautes de lister l'ensemble des fichiers contenus dans un répertoire en l'absence d'index (.cgi, .html, .php etc ....)
+Options All -Indexes
+
+#empecher l'acces aux fichier via le navigateur
+Order Deny,Allow
+<Files *.php>
+deny from all
+</Files>
+
+<Files ~"\.ht$">
+Order Allow,Deny
+deny from all
+Satisfy All
+</Files>
+
+<Files index.php>
+allow from all
+</Files>
+
+<Files ajax.php>
+allow from all
+</Files>
+
+
+
+
+
+#URL REWRITING
+RewriteEngine On
+
+
+
+#errors
+RewriteRule ^404$    /error/404.html [L]
+RewriteRule ^500$    /error/500.html [L]
+
+#admin
+RewriteRule ^wotg-admin/([0-9A-Za-z-_]+)$    /index.php?page=wotg-admin&onglets=$1 [L]
+
+#index.php
+RewriteRule ^([0-9A-Za-z-_]+)$    /index.php?page=$1 [L]
+
+RewriteRule ^$  /accueil [L]
+
+
+
+
+#ErrorDocument 404 /404
+#ErrorDocument 500 /500
+

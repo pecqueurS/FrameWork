@@ -1,0 +1,119 @@
+html, body {
+	width:100% !important;
+	height:100%;
+	overflow:hidden;
+}
+
+#errorMessage {
+	height:40%;
+	background-color: rgb(0,153,255);
+	position:relative;
+	overflow:hidden;
+}
+
+#btnmessage {
+	height:60%;
+	background-color: #333333;
+	position:relative;
+	overflow:hidden;
+}
+
+h1 {
+	position: absolute;
+	bottom:20px;
+	left:10%;
+	color:white;
+	/*font-family: "ExoB";*/
+	font-size:100px;
+}
+
+h1 span {
+	display:inline-block;
+	margin-left: 15px;
+	color:#333333;
+	font-family: "ExoSB";
+	font-size:50px;
+}
+
+#btn {
+	position:absolute;
+	top:20px;
+	right:5%;
+}
+
+#btn a {
+	display:block;
+	float:left;
+	margin:0 15px;
+	padding: 15px;
+	background-color: rgb(0,153,255);
+	color:white;
+	font-family: "ExoSB";
+	text-align: center;
+}
+
+#btn a:hover {
+	color:#333333;
+}
+
+#logo {
+	position: absolute;
+	bottom:40px;
+	left:0;
+
+}
+
+#logo img {
+	width:100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media screen and (max-width:500px) {
+
+	h1 {
+		font-size:80px;
+		text-align: center;
+		left:0;
+		width:100%;
+	
+	}
+
+	#btn {
+		position:static;
+		width:100%;
+		margin:0;
+		padding-top:15px;
+
+
+	}
+
+	#btn a {
+		display:block;
+		float:none;
+		margin:0 15px 15px;
+		background-color: rgb(0,153,255);
+		color:white;
+		font-family: "ExoSB";
+	}
+
+	#btn a:hover {
+		color:#333333;
+	}
+
+
+
+
+}

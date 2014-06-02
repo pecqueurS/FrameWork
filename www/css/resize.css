@@ -1,0 +1,144 @@
+
+
+
+
+
+
+
+/*Entre 1000 et 1500 px*/
+
+
+@media screen and (max-width:1500px) {
+
+	body {
+		width:980px;
+	}
+
+	body > header {
+		height:380px;
+		background-size: 980px 380px;
+		margin-bottom:-250px;
+		margin-bottom: 			calc((-380px)*2/3);
+	  	margin-bottom: -webkit-calc((-380px)*2/3);
+	  	margin-bottom:    -moz-calc((-380px)*2/3);
+	  	margin-bottom:     -ms-calc((-380px)*2/3);
+	  	margin-bottom:      -o-calc((-380px)*2/3);
+	}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*- de 1000 px*/
+
+
+@media screen and (max-width:1000px) {
+
+	body {
+		width:100%;
+	}
+
+	body > header {
+		height:380px;
+		background:url(../images/header.png) no-repeat left top; 
+		background-size: 980px 380px;
+		margin-bottom:-250px;
+		margin-bottom: 			calc((-380px)*2/3);
+	  	margin-bottom: -webkit-calc((-380px)*2/3);
+	  	margin-bottom:    -moz-calc((-380px)*2/3);
+	  	margin-bottom:     -ms-calc((-380px)*2/3);
+	  	margin-bottom:      -o-calc((-380px)*2/3);
+	}
+
+	section {
+		display:block;
+		margin-top: 60px;
+		}
+
+	section > header {
+		bottom:100%;
+		bottom: 		calc(100% - 5px);
+	  	bottom: -webkit-calc(100% - 5px);
+	  	bottom:    -moz-calc(100% - 5px);
+	  	bottom:     -ms-calc(100% - 5px);
+	  	bottom:      -o-calc(100% - 5px);
+	}
+
+
+}
+
+
+/*- de 500 px*/
+
+
+@media screen and (max-width:500px) {
+
+	body > header {
+		background-size: 200%;
+	}
+
+
+	body > footer a {
+		display:block;
+	}
+
+
+	body > footer #btn_liens {
+		display:block;
+	}
+
+	body > footer #infos_liens {
+		display:none;
+	}
+
+	body > footer #liens:hover #infos_liens {
+		display:block;
+		width:100%;
+		position:absolute;
+		bottom:0;
+		left:0;
+		color:white;
+		font-family: "ExoSB";
+		background-color: rgb(0,153,255);
+	}
+
+	body > footer #liens:hover + #signal {
+		display:none;
+	}
+
+	body > footer #infos_liens > li {
+		display:block;
+	}
+
+	#infos_liens li:not(:first-child):before {
+		content :"";
+	}
+
+	#infos_liens >li:hover {
+				box-shadow: inset 2px 2px 4px black;
+	   	-webkit-box-shadow: inset 2px 2px 4px black;
+		   -moz-box-shadow: inset 2px 2px 4px black;
+			-ms-box-shadow: inset 2px 2px 4px black;
+			 -o-box-shadow: inset 2px 2px 4px black;
+	}
+
+
+
+}
+
+
+
+
+
+
+

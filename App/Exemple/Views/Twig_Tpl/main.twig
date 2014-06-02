@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <title>WotG | {{ PAGE_HEAD_INFO.page }}</title>
+
+{% block stylesheetBase %}
+	    <link rel="stylesheet" type="text/css" href="css/reset.css">
+	    <link rel="stylesheet" type="text/css" href="css/style.css">
+{% endblock %}
+
+{% block stylesheetResize %}
+	    <link rel="stylesheet" type="text/css" href="css/resize.css">
+{% endblock %}
+		
+{% block javascript %}
+	    <script type="text/javascript" src="js/jquery.js"></script>
+	    <script type="text/javascript" src="js/style.js"></script>
+{% endblock %}
+
+{% block noscriptRedirect %} {% endblock %}
+
+		<link id="page_favicon" href="/favicon.ico" rel="icon" type="image/x-icon" />
+	</head>
+  <body>
+<header>
+	<h1>Warriors Of The Galaxy</h1>
+
+{% if session.message is defined %}
+	<p class='error'>{{ session.message }}</p>
+{% endif %}
+
+	<div id="flag">
+		<form method="POST" action="{{ href }}">
+			<div {% if session.lang == "fr" %}class="selected"{% endif %}><input type="submit" name="lang_fr" value="fr"></div>
+			<div {% if session.lang == "en" %}class="selected"{% endif %}><input type="submit" name="lang_en" value="us"></div>
+		</form>
+	</div>
+</header>
+<noscript>
+	<p class="error">Attention. Javascript est obligatoire pour acceder à la partie privée. En effet, ce jeu est basé notamment sur les langages PHP, AJAX et javascript. Sans ces outils, l'expérience de jeu serait quasi nulle. c'est pourquoi, nous vous invitons à activer javascript si vous souhaitez approfondir l'expérience.</p>
+</noscript> 
+
+
+
+{% block contenu %} {% endblock %}
+
+
+
+
+<footer>
+	<img src="../../images/logo.png" alt="Logo de Stephane Pecqueur">
+	<div id="liens">
+		<span id="btn_liens" class="minB history">{{ DICO.liens }}</span>
+		<ul id="infos_liens">
+{% block liens %}
+       <li><a href="{{ url.about }}">{{ LINKS.about }}</a></li>
+       <li><a href="{{ url.plan }}">{{ LINKS.plan }}</a></li>
+       <li><a href="{{ url.informations }}">{{ LINKS.informations }}</a></li>
+{% endblock %}
+		</ul>
+	</div>
+	
+	
+	<ul id="signal">
+{% block signal %}
+    	<li><a href="{{ url.abus }}">{{ LINKS.abus }}</a></li>
+    	<li><a href="{{ url.bug }}">{{ LINKS.bug }}</a></li>
+{% endblock %} 
+	</ul>
+	
+	
+</footer>
+
+  </body>
+</html>

@@ -1,0 +1,124 @@
+{
+	"webroot": {
+		"url": "/",
+		"controller":"WOTG\\Controllers\\Home::showHome",
+		"loadUrl": "/accueil"
+	},
+
+	"accueil": {
+		"url": "/accueil",
+		"constant": "URL_ACCUEIL",
+		"controller":"WOTG\\Controllers\\Home::showHome"
+	},
+
+	"confirmInscript": {
+		"url": "/confirmInscript",
+		"constant": "URL_CONFIRM_INS",
+		"controller":"Controllers\\Home::showConfirmInscript"
+	},
+
+	"envoimail": {
+		"url": "/envoimail",
+		"constant": "URL_ENV_MAIL",
+		"controller":"Controllers\\Home::showSendMail"
+	},
+
+	"forgot_pwd": {
+		"url": "/forgot_pwd",
+		"constant": "URL_FORGOT_PWD",
+		"controller":"Controllers\\Home::showForgotPwd"
+	},
+
+	"recupPwd": {
+		"url": "/recupPwd",
+		"constant": "URL_RECUP_PWD",
+		"controller":"Controllers\\Home::showGetNewPwd"
+	},
+
+
+	
+	"inscription": {
+		"url": "/inscription",
+		"constant": "URL_INSCRIPT",
+		"controller":"Controllers\\Profil::showInscription"
+	},
+
+	"profil": {
+		"url": "/profil",
+		"constant": "URL_PROFIL",
+		"controller":"Controllers\\Profil::showProfil"
+	},
+
+
+
+	"createGame": {
+		"url": "/createGame",
+		"constant": "URL_CREATE",
+		"controller":"Controllers\\Game::showCreateGame"
+	},
+
+	"joinGame": {
+		"url": "/joinGame",
+		"constant": "URL_JOIN",
+		"controller":"Controllers\\Game::showJoinGame"
+	},
+
+	"waitGame": {
+		"url": "/waitGame",
+		"constant": "URL_WAIT",
+		"controller":"Controllers\\Game::showWaitGame"
+	},
+
+	"game": {
+		"url": "/game",
+		"constant": "URL_GAME",
+		"controller":"Controllers\\Game::showGame"
+	},
+
+	"endOfGame": {
+		"url": "/endOfGame",
+		"constant": "URL_FIN",
+		"controller":"Controllers\\Game::showEndOfGame"
+	},
+
+
+
+	"about": {
+		"url": "/about",
+		"constant": "URL_ABOUT",
+		"controller":"Controllers\\Aside::showAbout"
+	},
+
+	"plan": {
+		"url": "/plan",
+		"constant": "URL_PLAN",
+		"controller":"Controllers\\Aside::showMapSite"
+	},
+
+	"informations": {
+		"url": "/informations",
+		"constant": "URL_INFO",
+		"controller":"Controllers\\Aside::showInformations"
+	},
+
+	"abus": {
+		"url": "/abus",
+		"constant": "URL_ABUS",
+		"controller":"Controllers\\Aside::showAbus"
+	},
+
+	"bug": {
+		"url": "/bug",
+		"constant": "URL_BUG",
+		"controller":"Controllers\\Aside::showBug"
+	},
+
+
+
+	"admin": {
+		"url": "/wotg-admin",
+		"controller":"Bundles\\Administration\\Admin::showAdmin"
+	}
+
+
+}
