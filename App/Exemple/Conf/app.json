@@ -63,8 +63,7 @@
             "ROOT": "dirname (BUNDLES).DS",
             "WEBROOT": "ROOT.'www'.DS",
             
-            "APP": "ROOT.'App'.DS",
-
+            
             "BDD": "BUNDLES.'Bdd'.DS",
             "CALCULS": "BUNDLES.'Calculs'.DS",
             "FUNCTIONS": "BUNDLES.'Functions'.DS",
@@ -72,7 +71,7 @@
             "PROFIL": "BUNDLES.'Profil'.DS",
             "TEMPLATES": "BUNDLES.'Templates'.DS",
             "CONTENU": "TEMPLATES.'contenu'.DS",
-            "FORMS": "BUNDLES.'Formulaires'.DS.'Formulaires_json'.DS",
+            
             
             "AJAX": "BUNDLES.'Ajax'.DS",
             "ADMIN": "BUNDLES.'Administration'.DS",
@@ -83,6 +82,9 @@
 
             "URL_ERR": "WEBROOT.'error'.DS.'404.html'",
             "URL_ERR500": "WEBROOT.'error'.DS.'500.html'"
+
+            "APP": "ROOT.'App'.DS",
+            "FORMS": "APP.'WOTG'.DS.'Conf'.DS.'Formulaires'.DS",
 
         }
 

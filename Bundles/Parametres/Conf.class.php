@@ -73,7 +73,7 @@ class Conf {
 
 	private function loadFiles() {
 		foreach ($this->files as $type => $file) {
-			$fileContents = file_get_contents(__DIR__.$file);
+			$fileContents = file_get_contents(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'App'.DIRECTORY_SEPARATOR.$file);
 			$this->config[$type] = json_decode($fileContents,true);
 		}
 	}
