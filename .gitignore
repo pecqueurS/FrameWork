@@ -1,6 +1,7 @@
 #################
 ## Eclipse
 #################
+App/
 
 *.pydevproject
 .project
