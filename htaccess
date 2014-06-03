@@ -37,6 +37,14 @@ RewriteRule ^500$    /error/500.html [L]
 #admin
 RewriteRule ^wotg-admin/([0-9A-Za-z-_]+)$    /index.php?page=wotg-admin&onglets=$1 [L]
 
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule (.*) ../App/WOTG/www/$0
+
+
+
+
 #index.php
 RewriteRule ^([0-9A-Za-z-_]+)$    /index.php?page=$1 [L]
 
