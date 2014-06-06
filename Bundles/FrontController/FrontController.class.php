@@ -7,8 +7,8 @@ use Bundles\Parametres\Conf;
 use Bundles\Templates\Tpl;
 use Bundles\Translate\Dico;
 
-use WOTG\Models\PagesModel;
-use WOTG\Models\DescPagesModel;
+use WotG\Models\PagesModel;
+use WotG\Models\DescPagesModel;
 
 class FrontController {
 
