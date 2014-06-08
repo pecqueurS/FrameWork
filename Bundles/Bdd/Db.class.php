@@ -257,8 +257,8 @@ class Db extends BDD {
 	public function insert($values, $fields=false) {
 		if($fields===false) {
 			$fields = array();
-			foreach ($this->fields[$this->tables[0]]["Field"] as $field) {
-				$fields[] = $field;
+			foreach ($this->fields[$this->tables[0]] as $field) {
+				$fields[] = $field["Field"];
 			}
 		}
 		$sql = $this->construct_request("insert",array("fields"=>$fields, "values"=>$values));
@@ -311,7 +311,7 @@ class Db extends BDD {
 
 		$varToTest = array();
 		// WHERE
-		if(count($fields==1)) {
+		if(count($fields)==1) {
 
 			$bind = $this->addBind($fields[0],$type);
 			
