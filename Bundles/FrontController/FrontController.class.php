@@ -83,13 +83,18 @@ class FrontController {
 	}
 
 	private function prepare() {
+		// Formattage du message d'erreur
+		if(isset($_SESSION['message'])) {
+			$this->response["message"] = $_SESSION['message'];
+			unset($_SESSION['message']);
+		}
+
 		$this->response["session"] =& $_SESSION;
 		$this->response["url"] = Conf::$links;
 		$this->response["href"] = Conf::$server["href"].substr(Conf::$route["url"],1); 
 
 		// Initialisation du Dictionnaire
 		Dico::init('bdd');
-
 
 		// Information sur les pages
 		// $req1
@@ -110,8 +115,6 @@ class FrontController {
 		foreach ($tradLiensPages as $lien) {
 			$this->response['LINKS'][$lien["pag_name"]] = $lien["tra_nom"];
 		}
-
-		
 
 		// Tradutions
 		// $req5
