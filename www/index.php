@@ -27,6 +27,6 @@ FrontController::launch();
 //var_dump($_FILES);
 //var_dump($_SESSION);
 //var_dump($_SERVER);
-var_dump(get_defined_vars()); 
+//var_dump(get_defined_vars()); 
 //print_r(get_defined_constants()); 
 ?>

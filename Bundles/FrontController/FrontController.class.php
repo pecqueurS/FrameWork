@@ -24,14 +24,13 @@ class FrontController {
 		$this->checkRoute();
 
 		// Prepare les données communes à toutes les pages
-		$this->prepare();
+		$this->precall();
 
 		// Lance le controleur de la page demandée
 		$this->launchController();
 			
-		// Affiche la vue
-		echo Tpl::display($this->response, "/App/".Conf::$appName."/Views/Twig_Tpl");
-		
+		// Prepare les données communes à toutes les pages
+		$this->postcall();
 
 	}
 
@@ -68,7 +67,6 @@ class FrontController {
 			$response = $this->controller->$method();
 			
 			$this->response = array_merge($this->response, $response);
-
 			
 		} else {
 			$this->notFound();
@@ -82,13 +80,7 @@ class FrontController {
 			exit();
 	}
 
-	private function prepare() {
-		// Formattage du message d'erreur
-		if(isset($_SESSION['message'])) {
-			$this->response["message"] = $_SESSION['message'];
-			unset($_SESSION['message']);
-		}
-
+	private function precall() {
 		$this->response["session"] =& $_SESSION;
 		$this->response["url"] = Conf::$links;
 		$this->response["href"] = Conf::$server["href"].substr(Conf::$route["url"],1); 
@@ -123,6 +115,18 @@ class FrontController {
 		foreach ($description as $desc) {
 		  	$this->response['DESC_PAGE'][] = $desc["tra_nom"];
 		}
+	}
+
+	private function postcall() {
+		// Formattage du message d'erreur
+		if(isset($_SESSION['message'])) {
+			$this->response["message"] = $_SESSION['message'];
+			unset($_SESSION['message']);
+		}
+
+		// Affiche la vue
+		echo Tpl::display($this->response, "/App/".Conf::$appName."/Views/Twig_Tpl");
+		
 	}
 
 
