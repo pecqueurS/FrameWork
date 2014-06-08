@@ -135,7 +135,7 @@ class Db extends BDD {
 				}
 
 
-				$this->construct_request .= "INSERT INTO {$this->tables[0]} $fields VALUES $values ";
+				$this->construct_request = "INSERT INTO {$this->tables[0]} $fields VALUES $values ";
 
 				break;
 			
@@ -150,12 +150,12 @@ class Db extends BDD {
 					$updates = $attr['fields']." = ".$values[0];
 				}
 
-				$this->construct_request .= "UPDATE {$this->tables[0]} SET $updates ";
+				$this->construct_request = "UPDATE {$this->tables[0]} SET $updates ";
 
 				break;
 			
 			case 'delete':
-				$this->construct_request .= "DELETE FROM {$this->tables[0]} ";
+				$this->construct_request = "DELETE FROM {$this->tables[0]} ";
 
 				break;
 			
@@ -226,6 +226,8 @@ class Db extends BDD {
 			$this->construct_request .= $this->orders[$i]["field"]." ".$this->orders[$i]["order"]." ";
 		}
 
+		// Reset les données servant a faire la requete
+		$this->resetReq();
 		
 		return $this->construct_request;
 
@@ -294,6 +296,7 @@ class Db extends BDD {
 
 
 	protected function stmtPrepare($fields, $values) {
+		$this->bind = '';
 		if(!is_array($fields)) {
 			$fields = array($fields);
 		}
@@ -308,7 +311,7 @@ class Db extends BDD {
 				$type[$field['Field']] = trim($t[0]);
 			}
 		}
-
+		
 		$varToTest = array();
 		// WHERE
 		if(count($fields)==1) {
@@ -397,7 +400,13 @@ class Db extends BDD {
 		}
 	}
 
+	protected function resetReq(){
+		$this->joins = array();
+		$this->rules = array();
+		$this->orders = array();
+		$this->groups = array();
 
+	}
 
 
 
