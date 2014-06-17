@@ -21,6 +21,8 @@ class Conf {
 
 	static $appName = 'Exemple';
 
+	static $response = array();
+
 	public function __construct($files) {
 		session_start();
 		$this->files = $files;

@@ -357,8 +357,7 @@ class Inputs {
 		$import = '';
 		// accept (string)
 		if(isset($options['accept'])) $import .= "accept='{$options['accept']}' ";
-		
-		$result .= $this->input($name, $options, $import);
+		$result .= implode($this->input($name, $options, $import));
 		// maxsize (int)
 		$maxSize = (isset($options['maxsize'])) ? $options['maxsize'] : "8000000" ;
 		$result .= "<input type='hidden' name='MAX_FILE_SIZE' value='$maxSize'>\n";

@@ -95,6 +95,8 @@ class Db extends BDD {
 
 	// Contruit la requete
 	protected function construct_request($type, $attr=array()) {
+		$this->bind = '';
+		$this->values = [];
 		// Base de la requete
 		switch ($type) {
 			case 'select':
@@ -296,7 +298,6 @@ class Db extends BDD {
 
 
 	protected function stmtPrepare($fields, $values) {
-		$this->bind = '';
 		if(!is_array($fields)) {
 			$fields = array($fields);
 		}
@@ -332,7 +333,6 @@ class Db extends BDD {
 			foreach ($values as $value) {
 				// INSERT, UPDATE, 
 				if(!is_array($value)) {
-
 					$varToTest[]= " ? ";
 					$this->values[] = $value;
 					$this->bind .= $this->addBind($fields[$i],$type);

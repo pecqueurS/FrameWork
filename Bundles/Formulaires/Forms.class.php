@@ -90,7 +90,6 @@ class Forms {
 		$result = true;
 		foreach ($this->input as $input) {
 			if(!$this->verifBlock($input['name'], $input['options'])) {
-				//var_dump($input);
 				$result = false;
 			}
 		}

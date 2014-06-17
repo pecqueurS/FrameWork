@@ -19,6 +19,8 @@ class FrontController {
 	protected $controller;
 
 	public function __construct() {
+
+		$this->response =& Conf::$response;
 		
 		// Prepare la route
 		$this->checkRoute();
@@ -54,7 +56,7 @@ class FrontController {
 	private function launchController() {
 		$access = preg_replace('/::[a-zA-Z0-9\/_]+$/', '.class.php', Conf::$route["controller"]);
 		$access = str_replace('\\', DS, $access);
-
+		
 		if(is_file(APP.$access)){
 			$routeArr = explode("::", Conf::$route["controller"]);
 
@@ -110,10 +112,10 @@ class FrontController {
 
 		// Tradutions
 		// $req5
-		$description = DescPagesModel::init()->getValues(array("tra_nom"), array("pag_name"=>self::$page));
+		$description = DescPagesModel::init()->getValues(array("tra_nom"), array("pag_name"=>self::$page)); 
 		$this->response['DESC_PAGE'] = array();
 		foreach ($description as $desc) {
-		  	$this->response['DESC_PAGE'][] = $desc["tra_nom"];
+		  	$this->response['DESC_PAGE'][] = (is_array($desc)) ? $desc["tra_nom"] : $desc;
 		}
 	}
 

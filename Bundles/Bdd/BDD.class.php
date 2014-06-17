@@ -94,6 +94,20 @@ class BDD {
 	public function execute($arr=''){
 		$nbVar = strlen($this->bind);
 
+		//var_dump($this->sql, $this->bind );
+		try {
+			$nbBind = substr_count($this->sql, ' ? ');
+			if($nbVar != $nbBind) {
+				$sqlErr = "SQL : \n {$this->sql}\n";
+				$bindErr = "Bind : \n {$this->bind}\n";
+				$arrErr = "Arr : \n ".serialize($arr)."\n";
+
+				throw new \Exception($sqlErr.$bindErr.$arrErr);
+			}
+		} catch (\Exception $e) {
+			echo $e->getMessage(), "\n";
+		}
+
 		//BIND
 		if ($nbVar!=0) {
 			$bind_param = '$this->stmt->bind_param($this->bind';
