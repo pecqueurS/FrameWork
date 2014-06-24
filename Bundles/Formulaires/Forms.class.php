@@ -153,11 +153,13 @@ class Forms {
 				$vars = $_POST;
 				break;
 		}
-		if(isset($vars[$name])) {
+
+		$vars = (($options['type'] == 'file')? $_FILES[$name] : $vars);
+		if(isset($vars[$name]) || ($options['type'] == 'file')) { 
 			if (isset($options['constraints'])) {
 				$response = true;
-				$vars = (($options['type'] == 'file')? $_FILES : $vars);
-				$value = $vars[$name];
+				
+				$value = (($options['type'] == 'file') ? $vars : $vars[$name]);
 				foreach ($options['constraints'] as $type => $constraint) {
 					if(!(isset($options['disabled']) && $options['disabled'] === true)) {
 						if(!Inspector::checkData($value, $type, $constraint)) {

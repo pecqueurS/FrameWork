@@ -404,20 +404,20 @@ class Inspector {
         
 
 // Contraintes sur les fichiers
-	private function File_Check($value, $constraint) {
+	private function File_Check($value, $constraint) { 
 		// origin : http://www.php.net/manual/fr/features.file-upload.php#114004
 		    // Undefined | Multiple Files | $_FILES Corruption Attack
 		    // If this request falls under any of them, treat it invalid.
 		    if (
-		        !isset($value['upfile']['error']) ||
-		        is_array($value['upfile']['error'])
+		        !isset($value['error']) ||
+		        is_array($value['error'])
 		    ) {
 		    	self::$error = '<span>Invalid parameters. </span>';
         		return false;
 		    }
 
 		    // Check $_FILES['upfile']['error'] value.
-		    switch ($value['upfile']['error']) {
+		    switch ($value['error']) {
 		        case UPLOAD_ERR_OK:
 		            break;
 		        case UPLOAD_ERR_NO_FILE:
@@ -433,7 +433,7 @@ class Inspector {
 		    }
 
 		    // You should also check filesize here.
-		    if ($value['upfile']['size'] > $constraint['maxSize']) {
+		    if ($value['size'] > $constraint['maxSize']) {
 		        self::$error = '<span>Exceeded filesize limit. </span>';
 	        	return false;
 		    }
@@ -441,8 +441,8 @@ class Inspector {
 		    // DO NOT TRUST $_FILES['upfile']['mime'] VALUE !!
 		    // Check MIME Type by yourself.
 		    $finfo = new \finfo(FILEINFO_MIME_TYPE);
-		    if (false === $ext = array_search(
-		        $finfo->file($value['upfile']['tmp_name']),$constraint['mimeTypes'], true)) {
+		    $pattern = '/'.$constraint['mimeTypes'].'/';
+		    if (0 === $ext = preg_match($pattern, $finfo->file($value['tmp_name']))) {
 		        self::$error = '<span>Invalid file format. </span>';
 	        	return false;
 		    }
