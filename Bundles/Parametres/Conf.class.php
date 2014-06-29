@@ -102,8 +102,27 @@ class Conf {
 		self::$constants = array_merge($constants, self::$constants);
 
 		// Enregistre les informations de la route en cours
-		foreach ($this->config["routing"] as $route) {
-			if ($_SERVER['REQUEST_URI']==$route["url"]) {
+		foreach ($this->config["routing"] as $route) { 
+			$url = '/^\\' . $route["url"] . '$/';
+			$urlMatch = preg_match($url, $_SERVER['REQUEST_URI']);
+			if ($urlMatch) {
+				preg_match_all('/\([^)]*\)/', $route["url"], $matches);
+				$urlParts = str_replace($matches[0], '???', $route["url"]);
+
+				$urlPartsArray = explode('???', $urlParts);
+				$a = [$_SERVER['REQUEST_URI']];
+				$vars = [];
+				foreach ($urlPartsArray as $urlPart) {
+					if($urlPart != '') {
+						$urlPart = str_replace('\?', '?', $urlPart);
+						$p = explode($urlPart, $a[count($a)-1]);
+						if($p[0] != '') $vars[] = $p[0];
+						$a = array_merge($a,$p);
+					}
+				}
+				if($a[count($a)-1] != '') $vars[] = $a[count($a)-1];
+				$route['vars'] = $vars;
+				$route['url'] = $_SERVER['REQUEST_URI'];
 				self::$route = $route;
 				return true;
 			}

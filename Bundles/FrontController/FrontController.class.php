@@ -45,7 +45,7 @@ class FrontController {
 
 
 	private function checkRoute() {
-		if(!empty(Conf::$route)) {
+		if(!empty(Conf::$route)) { 
 			self::$page = (isset(Conf::$route["loadUrl"])) ? substr(Conf::$route["loadUrl"],1) : substr(Conf::$route["url"],1) ;
 		} else {
 			$this->notFound();
@@ -66,7 +66,7 @@ class FrontController {
 			$method = $routeArr[1];
 			require APP.$access;
 			$this->controller = new $class();
-			$response = $this->controller->$method();
+			$response = call_user_func_array(array($this->controller, $method), Conf::$route["vars"]);
 			
 			$this->response = array_merge($this->response, $response);
 			
