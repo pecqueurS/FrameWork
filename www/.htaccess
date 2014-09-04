@@ -17,10 +17,6 @@ Satisfy All
 allow from all
 </Files>
 
-<Files ajax.php>
-allow from all
-</Files>
-
 
 
 
@@ -32,11 +28,8 @@ RewriteEngine On
 
 
 #errors
-RewriteRule ^404$    /home/oscar/wotg/App/WotG/www/error/404.html [L]
-RewriteRule ^500$    /home/oscar/wotg/App/WotG/www/error/500.html [L]
-
-#admin
-RewriteRule ^wotg-admin/([0-9A-Za-z-_]+)$    /index.php?page=wotg-admin&onglets=$1 [L]
+RewriteRule ^404$    /home/oscar/ads/App/WotG/www/error/404.html [L]
+RewriteRule ^500$    /home/oscar/ads/App/WotG/www/error/500.html [L]
 
 
 

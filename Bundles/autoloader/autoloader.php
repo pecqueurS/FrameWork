@@ -30,7 +30,7 @@ $loader->registerNamespaces(array(
     //'Controllers'               => dirname(dirname(__DIR__)),
     'Models'                    => dirname(dirname(__DIR__)),
 
-    'WotG'                      => dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'App',
+    'ads'                      => dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'App',
     
        
 ));

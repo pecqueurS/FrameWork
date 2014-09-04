@@ -11,8 +11,8 @@ require_once ("../Bundles/autoloader/autoloader.php");
 
 /* Paramètres */
 $confFiles = array(
-		"app" => "WotG/Conf/app.json",
-		"routing" => "WotG/Conf/Routing/routing.json",
+		"app" => "ads/Conf/app.json",
+		"routing" => "ads/Conf/Routing/routing.json",
 );
 Conf::init($confFiles);
 
