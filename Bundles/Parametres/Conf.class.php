@@ -7,29 +7,32 @@ class Conf {
 
 	private $files = array();
 
-	private $config = array();
+	private $config;
 
-	static $server = array();
+	private static $server;
 
-	static $route = array();
+	private static $route;
 
-	static $constants = array();
+	private static $constants;
 
-	static $emails = array();
+	private static $emails;
 
-	static $links = array();
+	private static $links;
 
-	static $appName = 'Exemple';
+	private static $appName = '';
 
-	static $response = array();
+	public static $response = array();
 
 	public function __construct($files) {
 		session_start();
 		$this->files = $files;
-		
+		ini_set ('display_errors', 'On');
 		try {
 			// Charge les fichiers
 			$this->loadFiles();
+
+			// Verifie l'environnement PROD OU DEV
+			$this->checkEnvironment();
 
 			// Verifie le serveur
 			$this->checkServer();
@@ -46,26 +49,22 @@ class Conf {
 			// determine le timezone
 			$this->checkTimezone();
 
-			// Verifie l'environnement PROD OU DEV
-			$this->checkEnvironment();
-
 			// prepare les constantes
 			$this->predefineConstants();
 
 			// Verifie la langue
 			$this->checkLang();
 
+    		
 
 		} catch (Exception $e) {
-    		header("HTTP/1.1 404 Not Found");
+			header("HTTP/1.1 404 Not Found");
   			echo file_get_contents(__DIR__."error/404.html"); 
   			var_dump($e);
   			exit();
 		}
-
-		
-
 	}
+
 
 	public static function init($files) {
 		$conf = new Conf($files);
@@ -73,18 +72,39 @@ class Conf {
 	}
 
 
+
 	private function loadFiles() {
+		$this->config = new ConfEntity();
 		foreach ($this->files as $type => $file) {
 			$fileContents = file_get_contents(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'App'.DIRECTORY_SEPARATOR.$file);
-			$this->config[$type] = json_decode($fileContents,true);
+			$this->config->setValue($type, json_decode($fileContents,true));
 		}
 	}
 
+
+	private function checkEnvironment() {
+		switch ($this->config->getEnvironment()) {
+			case 'PROD':
+				error_reporting(0);
+				set_error_handler(function() { $this->userErrorHandler(); } );
+				break;
+			
+			default:
+				error_reporting(E_ALL|E_STRICT);
+				ini_set ('display_errors', 'On');  // affiche les erreurs et les fonctions obsoletes en mode developpement
+				ini_set('error_log',__DIR__."/../../php_error.log"); // enregistre les erreurs dans un fichier 'php_error.log'
+				break;
+		}
+		
+	}
+
+
 	private function checkServer() {
-		foreach ($this->config["app"]["serveurs"] as $os) {
+		self::$server = new ConfEntity();
+		foreach ($this->config->getServeurs() as $os) {
 			if ($_SERVER['SERVER_NAME']==$os["host"]) {
-				self::$server = $os;
-				self::$server["href"] = $os["protocole"]."://".$os["host"]."/";
+				self::$server->addConf($os);
+				self::$server->setValue('href', $os["protocole"] . '://' . $os['host'] . '/');
 				return true;
 			}
 		}
@@ -93,16 +113,18 @@ class Conf {
 
 	private function checkRoute() {
 		// Créé le tableau permettant la creation des CONSTANTES
-		$constants = array();
-		foreach ($this->config["routing"] as $page => $route) {
-			$url = self::$server["href"].substr($route["url"],1); 
-			if(isset($route["constant"])) $constants[$route["constant"]] = $url;
-			self::$links[$page] = $url;
+		if (!(self::$constants instanceof ConfEntity)) {
+			self::$constants = new ConfEntity();
 		}
-		self::$constants = array_merge($constants, self::$constants);
-
+		self::$links = new ConfEntity();
+		foreach ($this->config->getRouting() as $page => $route) {
+			$url = self::$server->getHref() . substr($route["url"],1); 
+			if(isset($route["constant"])) self::$constants->setValue($route["constant"], $url);
+			self::$links->setValue($page, $url);
+		}
+		
 		// Enregistre les informations de la route en cours
-		foreach ($this->config["routing"] as $route) { 
+		foreach ($this->config->getRouting() as $route) { 
 			$url = '/^\\' . $route["url"] . '$/';
 			$urlMatch = preg_match($url, $_SERVER['REQUEST_URI']);
 			if ($urlMatch) {
@@ -123,47 +145,35 @@ class Conf {
 				if($a[count($a)-1] != '') $vars[] = $a[count($a)-1];
 				$route['vars'] = $vars;
 				$route['url'] = $_SERVER['REQUEST_URI'];
-				self::$route = $route;
+				self::$route = new ConfEntity($route);
 				return true;
 			}
 		}
 	}
 
 	private function setAppName() {
-		self::$appName = $this->config["app"]["appName"];
+		self::$appName = $this->config->getAppName();
 	}
 
 
 	private function checkEmails() {
-		self::$emails = array_merge($this->config["app"]["emails"], self::$emails);
+		if (!(self::$emails instanceof ConfEntity)) {
+			self::$emails = new ConfEntity();
+		}
+		self::$emails->addConf($this->config->getEmails());
 	}
 
 
 	private function checkTimezone() {
-		date_default_timezone_set($this->config["app"]["timezone"]);
-	}
-
-
-	private function checkEnvironment() {
-		switch ($this->config["app"]["environment"]) {
-			case 'PROD':
-				error_reporting(0);
-				set_error_handler(function() { $this->userErrorHandler(); } );
-				break;
-			
-			default:
-				error_reporting(E_ALL|E_STRICT);
-				ini_set ('display_errors', 'On');  // affiche les erreurs et les fonctions obsoletes en mode developpement
-				ini_set('error_log',__DIR__."/../../php_error.log"); // enregistre les erreurs dans un fichier 'php_error.log'
-				break;
-		}
-		
+		date_default_timezone_set($this->config->getTimezone());
 	}
 
 
 	private function predefineConstants() {
-		$constants = array();
-		foreach ($this->config["app"]["constantes"]["folders"] as $key => $value) {
+		if (!(self::$constants instanceof ConfEntity)) {
+			self::$constants = new ConfEntity();
+		}
+		foreach ($this->config->getConstantes()["folders"] as $key => $value) {
 			$test = preg_match_all('~\b[[:upper:]]+\b~', $value, $m);
 			if($test) {
 				$m = array_unique($m[0]);
@@ -172,9 +182,8 @@ class Conf {
 				}
 			}
 			eval("\$this->$key = \$val = $value;");
-			$constants[$key] = $val;
+			self::$constants->setValue($key, $val);
 		}
-		self::$constants = array_merge($constants, self::$constants);
 	}
 
 
@@ -258,6 +267,23 @@ class Conf {
 			exit();
 		}
 	}
+
+
+
+
+	public function __callStatic($method, $arguments) {
+		$argument = lcfirst(substr($method,3)); 
+		if (isset(self::$$argument) && self::$$argument !== null) {
+			return self::$$argument;
+		} 
+		
+
+		throw new Exception('vous avez appelez la methode $method mais elle ne semble pas exister.');
+		
+		return false;
+	}
+
+
 
 
 }

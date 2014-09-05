@@ -17,9 +17,9 @@ $confFiles = array(
 Conf::init($confFiles);
 
 /* Constantes */
-foreach (Conf::$constants as $key => $value) {
+/*foreach (Conf::getConstants()->getConf() as $key => $value) {
 	define ($key, $value);
-}
+}*/
 
 FrontController::launch();
 

@@ -45,10 +45,11 @@ class FrontController {
 
 
 	private function checkRoute() {
-		if(!empty(Conf::$route)) { 
-			self::$page = (isset(Conf::$route["loadUrl"])) ? substr(Conf::$route["loadUrl"],1) : substr(Conf::$route["url"],1) ;
+		if(count(Conf::getRoute()) != 0) { 
+			self::$page = (count(Conf::getRoute()->getLoadUrl())) != 0 ? substr(Conf::getRoute()->getLoadUrl(),1) : substr(Conf::getRoute()->getUrl(),1) ;
+			var_dump(self::$page);
 		} else {
-			$this->notFound();
+			//$this->notFound();
 		}
 	}
 
@@ -71,14 +72,14 @@ class FrontController {
 			$this->response = array_merge($this->response, $response);
 			
 		} else {
-			$this->notFound();
+			//$this->notFound();
 		}
 	}
 
 	private function notFound() {
 			// Page inexistante
 			header("HTTP/1.1 404 Not Found");
-			echo file_get_contents(URL_ERR); 
+			echo file_get_contents(Conf::getConstants()->getConf()['URL_ERR']); 
 			exit();
 	}
 
