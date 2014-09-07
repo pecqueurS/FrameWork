@@ -15,7 +15,7 @@ use Bundles\Translate\Dico;
 
 
 class Forms {
-	public $dirForm = FORMS;
+	public $dirForm;
 
 	public static $renderHTML = array();
 
@@ -25,8 +25,9 @@ class Forms {
 	public $errors;
 
 	public function __construct($nameForm=null, $type="POST", $dirForm=null) {
+		$this->dirForm = Conf::getConstants()->getConf()['FORMS'];
 		if($nameForm) $this->nameForm = $nameForm;
-		if($dirForm) $this->dirForm = ROOT.$dirForm;
+		if($dirForm) $this->dirForm = Conf::getConstants()->getConf()['ROOT'].$dirForm;
 		$this->type = $type;
 		$this->loadForm();
 	}

@@ -3,9 +3,13 @@
 
 namespace Bundles\Parametres;
 
+use Exception;
+
 class Conf {
 
-	private $files = array();
+	private $files = array(
+		'framework' => '../Bundles/Parametres/conf.json'
+	);
 
 	private $config;
 
@@ -21,12 +25,14 @@ class Conf {
 
 	private static $appName = '';
 
+	private static $translateType = 'bdd';
+
 	public static $response = array();
 
 	public function __construct($files) {
 		session_start();
-		$this->files = $files;
-		ini_set ('display_errors', 'On');
+		$this->files = array_merge($this->files, $files);
+		
 		try {
 			// Charge les fichiers
 			$this->loadFiles();
@@ -34,14 +40,17 @@ class Conf {
 			// Verifie l'environnement PROD OU DEV
 			$this->checkEnvironment();
 
+			// recupere le nom de l'app
+			$this->setAppName();
+
+			// prepare les constantes du framework
+			$this->predefineFWConstants();
+
 			// Verifie le serveur
 			$this->checkServer();
 
 			// Verifie le la route
 			$this->checkRoute();
-
-			// recupere le nom de l'app
-			$this->setAppName();
 
 			// Verifie les emails
 			$this->checkEmails();
@@ -49,13 +58,11 @@ class Conf {
 			// determine le timezone
 			$this->checkTimezone();
 
-			// prepare les constantes
+			// prepare les constantes de l'app
 			$this->predefineConstants();
 
 			// Verifie la langue
 			$this->checkLang();
-
-    		
 
 		} catch (Exception $e) {
 			header("HTTP/1.1 404 Not Found");
@@ -95,7 +102,30 @@ class Conf {
 				ini_set('error_log',__DIR__."/../../php_error.log"); // enregistre les erreurs dans un fichier 'php_error.log'
 				break;
 		}
-		
+	}
+
+
+	private function setAppName() {
+		self::$appName = $this->config->getAppName();
+	}
+
+
+	private function predefineFWConstants() {
+		if (!(self::$constants instanceof ConfEntity)) {
+			self::$constants = new ConfEntity();
+		}
+		foreach ($this->config->getFrameworkConstantes() as $key => $value) {
+			$value = str_replace('APPNAME', self::$appName, $value);
+			$test = preg_match_all('~\b[[:upper:]]+\b~', $value, $m);
+			if($test) {
+				$m = array_unique($m[0]);
+				foreach ($m as $const) {
+					$value = str_replace($const, '$this->'.$const, $value );
+				}
+			}
+			eval("\$this->$key = \$val = $value;");
+			self::$constants->setValue($key, $val);
+		}
 	}
 
 
@@ -110,6 +140,7 @@ class Conf {
 		}
 		throw new Exception('Probleme de serveur.');
 	}
+
 
 	private function checkRoute() {
 		// Créé le tableau permettant la creation des CONSTANTES
@@ -151,10 +182,6 @@ class Conf {
 		}
 	}
 
-	private function setAppName() {
-		self::$appName = $this->config->getAppName();
-	}
-
 
 	private function checkEmails() {
 		if (!(self::$emails instanceof ConfEntity)) {
@@ -173,7 +200,7 @@ class Conf {
 		if (!(self::$constants instanceof ConfEntity)) {
 			self::$constants = new ConfEntity();
 		}
-		foreach ($this->config->getConstantes()["folders"] as $key => $value) {
+		foreach ($this->config->getConstantes() as $key => $value) {
 			$test = preg_match_all('~\b[[:upper:]]+\b~', $value, $m);
 			if($test) {
 				$m = array_unique($m[0]);
@@ -187,8 +214,17 @@ class Conf {
 	}
 
 
+	private function setTranslateType() {
+		try {
+			self::$translateType = $this->config->getTranslateType();
+		} catch (Exception $e) {
+			
+		}
+	}
+
 
 	private function checkLang() {
+		$this->setTranslateType();
 		// Mise en place de la session "lang" qui permet de definir la langue lors de l'affichage
 		if(!isset($_SESSION['lang'])) {
 			$_SESSION['lang'] = "fr";
@@ -210,12 +246,6 @@ class Conf {
 			exit();
 		}
 	}
-
-
-
-
-
-
 	
 
 	private function userErrorHandler($errno, $errmsg, $filename, $linenum, $vars){
@@ -240,7 +270,6 @@ class Conf {
 			E_USER_NOTICE => "Note spécifique",
 			E_STRICT => "Runtime Notice"
 		);
-
 
 		// Les niveaux qui seront enregistrés
 		$user_errors = array(E_ERROR, E_WARNING, E_PARSE, E_USER_ERROR, E_USER_WARNING, E_USER_NOTICE);
@@ -269,14 +298,11 @@ class Conf {
 	}
 
 
-
-
 	public function __callStatic($method, $arguments) {
 		$argument = lcfirst(substr($method,3)); 
 		if (isset(self::$$argument) && self::$$argument !== null) {
 			return self::$$argument;
 		} 
-		
 
 		throw new Exception('vous avez appelez la methode $method mais elle ne semble pas exister.');
 		

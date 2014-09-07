@@ -61,7 +61,7 @@ class Tpl {
 	}
 
 	protected function selectTpl() {
-		$controller = explode("\\",Conf::$route["controller"]);
+		$controller = explode("\\",Conf::getRoute()->getController());
 		return str_replace("::", DIRECTORY_SEPARATOR, $controller[count($controller)-1]).".twig";
 	}
 

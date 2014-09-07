@@ -28,16 +28,13 @@ class BDD {
 
 	public function __construct($statement=true)
 	{
-
-		$mdp = Conf::$server["bdd_password"];
+		$server = Conf::getServer();
+		$mdp = $server->getBdd_password();
 		// Sauvegarde des informations utiles à afficher
-		$this->serveur = Conf::$server["bdd_bddServer"];
-		$this->user = Conf::$server["bdd_username"];
-		$this->base = Conf::$server["bdd_Database"];
+		$this->serveur = $server->getBdd_bddServer();
+		$this->user = $server->getBdd_username();
+		$this->base = $server->getBdd_Database();
 		$this->requete_en_cours = false; // Pour nous protéger d'un appel intempestif à "retourne_ligne"
-		
-
-
 		
 		$this->connexion = new \mysqli($this->serveur, $this->user, $mdp, $this->base);
 

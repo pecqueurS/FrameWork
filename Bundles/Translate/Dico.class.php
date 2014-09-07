@@ -16,6 +16,10 @@ Abstract class Dico extends Tpl {
 			case 'bdd':
 				self::$traduction = DictionnaireModel::init()->getValues();
 				break;
+
+			case 'json':
+
+				break;
 		}
 		
 	}

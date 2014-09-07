@@ -1,0 +1,25 @@
+{
+    "frameworkConstantes": {
+        "DS": "DIRECTORY_SEPARATOR",
+        "PARAM": "__DIR__.DS",
+
+        "CONFIG": "PARAM.'config'.DS",
+        "PAR_CLASS": "PARAM.'class'.DS",
+
+        "BUNDLES": "dirname(PARAM).DS",
+
+        "ROOT": "dirname(BUNDLES).DS",
+                        
+        "BDD": "BUNDLES.'Bdd'.DS",
+        "TEMPLATES": "BUNDLES.'Templates'.DS",
+
+        "CTRL": "ROOT.'Controllers'.DS",
+
+        "APP": "ROOT.'App'.DS",
+        "WEBROOT": "APP.'APPNAME'.DS.'www'.DS",
+        "FORMS": "APP.'APPNAME'.DS.'Conf'.DS.'Formulaires'.DS",
+
+        "URL_ERR": "WEBROOT.'error'.DS.'404.html'",
+        "URL_ERR500": "WEBROOT.'error'.DS.'500.html'"
+    }
+}

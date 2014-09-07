@@ -16,11 +16,6 @@ $confFiles = array(
 );
 Conf::init($confFiles);
 
-/* Constantes */
-/*foreach (Conf::getConstants()->getConf() as $key => $value) {
-	define ($key, $value);
-}*/
-
 FrontController::launch();
 
 //var_dump($_POST);

@@ -3,6 +3,8 @@
 
 namespace Bundles\Parametres;
 
+use Exception;
+
 class ConfEntity {
 
 	private $conf = array();

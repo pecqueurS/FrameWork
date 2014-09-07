@@ -7,10 +7,17 @@ use Bundles\Parametres\Conf;
 use Bundles\Templates\Tpl;
 use Bundles\Translate\Dico;
 
-use WotG\Models\PagesModel;
-use WotG\Models\DescPagesModel;
-
 class FrontController {
+
+	protected $precall = array (
+		'response' => array('Session', 'Urls'),
+		'calls' => array('Dico')
+	);
+
+	protected $postcall = array (
+		'response' => array('Message'),
+		'calls' => array('Tpl')
+	);
 
 	protected static $page;
 
@@ -26,13 +33,13 @@ class FrontController {
 		$this->checkRoute();
 
 		// Prepare les données communes à toutes les pages
-		$this->precall();
+		$this->calls('precall');
 
 		// Lance le controleur de la page demandée
 		$this->launchController();
 			
 		// Prepare les données communes à toutes les pages
-		$this->postcall();
+		$this->calls('postcall');
 
 	}
 
@@ -47,32 +54,31 @@ class FrontController {
 	private function checkRoute() {
 		if(count(Conf::getRoute()) != 0) { 
 			self::$page = (count(Conf::getRoute()->getLoadUrl())) != 0 ? substr(Conf::getRoute()->getLoadUrl(),1) : substr(Conf::getRoute()->getUrl(),1) ;
-			var_dump(self::$page);
 		} else {
-			//$this->notFound();
+			$this->notFound();
 		}
 	}
 
 
 	private function launchController() {
-		$access = preg_replace('/::[a-zA-Z0-9\/_]+$/', '.class.php', Conf::$route["controller"]);
-		$access = str_replace('\\', DS, $access);
+		$access = preg_replace('/::[a-zA-Z0-9\/_]+$/', '.class.php', Conf::getRoute()->getController());
+		$access = str_replace('\\', Conf::getConstants()->getConf()['DS'], $access);
 		
-		if(is_file(APP.$access)){
-			$routeArr = explode("::", Conf::$route["controller"]);
+		if(is_file(Conf::getConstants()->getConf()['APP'].$access)){
+			$routeArr = explode("::", Conf::getRoute()->getController());
 
 			$nsArr = explode("/", $routeArr[0]);
 			$class = $nsArr[count($nsArr)-1];
 
 			$method = $routeArr[1];
-			require APP.$access;
+			require Conf::getConstants()->getConf()['APP'].$access;
 			$this->controller = new $class();
-			$response = call_user_func_array(array($this->controller, $method), Conf::$route["vars"]);
+			$response = call_user_func_array(array($this->controller, $method), Conf::getRoute()->getVars());
 			
 			$this->response = array_merge($this->response, $response);
 			
 		} else {
-			//$this->notFound();
+			$this->notFound();
 		}
 	}
 
@@ -83,56 +89,62 @@ class FrontController {
 			exit();
 	}
 
-	private function precall() {
-		$this->response["session"] =& $_SESSION;
-		$this->response["url"] = Conf::$links;
-		$this->response["href"] = Conf::$server["href"].substr(Conf::$route["url"],1); 
+	
+	private function calls($type) {
+		$this->initResponse($type);
 
-		// Initialisation du Dictionnaire
-		Dico::init('bdd');
+		$this->initCalls($type);
+	}
 
-		// Information sur les pages
-		// $req1
-		$pagesInfos = PagesModel::init()->getPagesInformations();
-		$this->response['PAGES_NOJS'] = $pagesInfos->getValues("pag_name", array("pag_template"=>"styleAccueil")); 
 
-		// Informations sur la page
-		// $req2
-		$pageHeadInfos = $pagesInfos->getValues(array("tra_nom","pag_name","pag_template"), array("pag_name"=>self::$page));
-		$this->response['PAGE_HEAD_INFO']["traduction"] = $pageHeadInfos["tra_nom"];
-		$this->response['PAGE_HEAD_INFO']["page"] = $pageHeadInfos["pag_name"];
-		$this->response['PAGE_HEAD_INFO']["template"] = $pageHeadInfos["pag_template"];
-
-		// Traduction des liens des pages
-		// $req3
-		$tradLiensPages = $pagesInfos->getValues(array("pag_name","tra_nom"));
-		$this->response['LINKS'] = array();
-		foreach ($tradLiensPages as $lien) {
-			$this->response['LINKS'][$lien["pag_name"]] = $lien["tra_nom"];
-		}
-
-		// Tradutions
-		// $req5
-		$description = DescPagesModel::init()->getValues(array("tra_nom"), array("pag_name"=>self::$page)); 
-		$this->response['DESC_PAGE'] = array();
-		foreach ($description as $desc) {
-		  	$this->response['DESC_PAGE'][] = (is_array($desc)) ? $desc["tra_nom"] : $desc;
+	private function initResponse($type) {
+		$calls = $this->$type;
+		foreach ($calls['response'] as $value) {
+			$method = 'format' . $value;
+			$this->$method();
 		}
 	}
 
-	private function postcall() {
+
+	private function initCalls($type) {
+		$calls = $this->$type;
+		foreach ($calls['calls'] as $value) {
+			$method = 'call' . $value;
+			$this->$method();
+		}
+	}
+
+
+	private function formatSession() {
+		$this->response["session"] =& $_SESSION;
+	}
+
+
+	private function formatUrls() {
+		$this->response["url"] = Conf::getLinks()->getConf();
+		$this->response["href"] = Conf::getServer()->getHref() . substr(Conf::getRoute()->getUrl(), 1); 
+	}
+
+
+	private function formatMessage() {
 		// Formattage du message d'erreur
 		if(isset($_SESSION['message'])) {
 			$this->response["message"] = $_SESSION['message'];
 			unset($_SESSION['message']);
 		}
-
-		// Affiche la vue
-		echo Tpl::display($this->response, "/App/".Conf::$appName."/Views/Twig_Tpl");
-		
 	}
 
 
+	private function callDico() {
+		// Initialisation du Dictionnaire
+		Dico::init(Conf::getTranslateType());
+	}
+
+
+	private function callTpl() {
+		// Affiche la vue
+		echo Tpl::display($this->response, "/App/" . Conf::getAppName() . "/Views/Twig_Tpl");
+	}
 
 
 /*
