@@ -41,6 +41,8 @@ class Inputs {
 		if(isset($options['maxlength'] )) $result .= "maxlength='{$options['maxlength']}' ";
 		//  required (bol)
 		if(isset($options['required']) && $options['required'] === true) $result .= "required ";
+		//  pattern (string) expression reguliere
+		if(isset($options['pattern'] )) $result .= "pattern='{$options['pattern']}' ";
 		//  disabled (bol)
 		if(isset($options['disabled']) && $options['disabled'] === true) $result .= "disabled ";
 		// readonly (bol)
@@ -211,7 +213,7 @@ class Inputs {
 		//  maxlength (int)
 		if(isset($options['maxlength'] )) $result .= "maxlength='{$options['maxlength']}' ";
 		//  pattern (string) expression reguliere
-		if(isset($options['pattern'] )) $result .= "pattern=='{$options['pattern']}' ";
+		if(isset($options['pattern'] )) $result .= "pattern='{$options['pattern']}' ";
 		//  required (bol)
 		if(isset($options['required']) && $options['required'] === true) $result .= "required ";
 		//  disabled (bol)

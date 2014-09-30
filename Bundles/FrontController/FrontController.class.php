@@ -52,8 +52,8 @@ class FrontController {
 
 
 	private function checkRoute() {
-		if(count(Conf::getRoute()) != 0) { 
-			self::$page = (count(Conf::getRoute()->getLoadUrl())) != 0 ? substr(Conf::getRoute()->getLoadUrl(),1) : substr(Conf::getRoute()->getUrl(),1) ;
+		if(Conf::getRoute() !== false) { 
+			self::$page = (Conf::getRoute()->getLoadUrl() !== false) ? substr(Conf::getRoute()->getLoadUrl(),1) : substr(Conf::getRoute()->getUrl(),1) ;
 		} else {
 			$this->notFound();
 		}
@@ -123,6 +123,7 @@ class FrontController {
 	private function formatUrls() {
 		$this->response["url"] = Conf::getLinks()->getConf();
 		$this->response["href"] = Conf::getServer()->getHref() . substr(Conf::getRoute()->getUrl(), 1); 
+		$this->response["pageRef"] = self::$page;
 	}
 
 

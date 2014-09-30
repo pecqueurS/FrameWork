@@ -28,8 +28,8 @@ RewriteEngine On
 
 
 #errors
-RewriteRule ^404$    /home/oscar/ads/App/WotG/www/error/404.html [L]
-RewriteRule ^500$    /home/oscar/ads/App/WotG/www/error/500.html [L]
+RewriteRule ^404$    /home/oscar/ads/App/ads/www/error/404.html [L]
+RewriteRule ^500$    /home/oscar/ads/App/ads/www/error/500.html [L]
 
 
 

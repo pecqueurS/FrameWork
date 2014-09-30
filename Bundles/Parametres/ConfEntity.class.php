@@ -46,7 +46,7 @@ class ConfEntity {
 			} 
 		}
 
-		throw new Exception('vous avez appelez la methode $method mais elle ne semble pas exister.');
+		//throw new Exception('vous avez appelez la methode $method mais elle ne semble pas exister.');
 		
 		return false;
 	}

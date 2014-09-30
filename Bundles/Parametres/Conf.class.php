@@ -215,11 +215,14 @@ class Conf {
 
 
 	private function setTranslateType() {
-		try {
+		if ($this->config->getTranslateType() !== false) {
+			self::$translateType = $this->config->getTranslateType();
+		}
+		/*try {
 			self::$translateType = $this->config->getTranslateType();
 		} catch (Exception $e) {
 			
-		}
+		}*/
 	}
 
 
@@ -304,7 +307,7 @@ class Conf {
 			return self::$$argument;
 		} 
 
-		throw new Exception('vous avez appelez la methode $method mais elle ne semble pas exister.');
+		//throw new Exception('vous avez appelez la methode $method mais elle ne semble pas exister.');
 		
 		return false;
 	}

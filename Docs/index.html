@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Doc Bundle Formulaire</title>
+	<link rel="stylesheet" href="">
+	<style type="text/css">
+		.code {
+			width:calc(100% - 70px);
+			overflow: auto;
+			margin:0 20px;
+			padding:15px;
+			border-radius: 7px;
+			background: #272822;
+			color:white;
+		}
+
+		.code .tag {
+			color: #D4496C;
+		}
+		.code .data {
+			color: #009900;
+		}
+		.code .str {
+			color: #E6DB74;
+		}
+		.code .twig {
+			color: #4F9FCF;
+		}
+		.code .nb {
+			color: #6F57DD;
+		}
+		.code .comment {
+			color: #888888;
+		}
+
+		.italic {
+			font-style: italic;
+		}
+
+		.header {
+			margin:0;
+			border: 1px solid #ddd;
+		    color: #333;
+			padding: 10px 15px;
+		    cursor:pointer;
+			background-color: #f5f5f5;
+		}
+
+		.content {
+			display:none;
+			background-color: #fefefe;
+		    border: 1px solid #ddd;
+		    color: #333;
+			border-top:0;
+		    padding: 10px 15px;
+		}
+
+		.header:first-of-type {
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+		}
+
+
+		
+
+	</style>
+	<script src="http://code.jquery.com/jquery-1.9.0.js"></script>
+	<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		$('.header').click(function() {
+			$(this).next('.content').slideToggle('slow');
+		});
+	});
+	</script>
+</head>
+<body>
+	<h1>Bundle Formulaire</h1>
+
+	<h2 class="header">1. Exemple d'utilisation</h2>
+	<div class="content">
+		<h3>Exemple.json</h3>
+	<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"label"</span>: <span class="str">"name"</span>,
+			<span class="twig">"translate"</span>: <span class="tag">true</span>,
+			<span class="twig">"class"</span>: <span class="str">"input"</span>,
+			<span class="twig">"placeholder"</span>: <span class="str">"Votre nom"</span>,
+			<span class="twig">"required"</span>: <span class="tag">true</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"constraints"</span>:{ <span class="comment">/* Contraintes pour valider le formulaire */</span>
+				<span class="twig">"NotBlank"</span>: <span class="tag">true</span>,
+				<span class="twig">"Type"</span>: <span class="str">"string"</span>,
+				<span class="twig">"Regex"</span>: {
+					<span class="twig">"pattern"</span>: <span class="str">"/^([0-9A-Za-z]+$)/"</span>,
+					<span class="twig">"match"</span>: <span class="tag">true</span>
+				},
+				<span class="twig">"Length"</span>:{
+					<span class="twig">"min"</span>: <span class="nb">5</span>,
+					<span class="twig">"max"</span>: <span class="nb">16</span>
+				}
+			}
+		}
+	},
+	<span class="twig">"Email"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"email"</span>,
+		<span class="twig">"options"</span>: {
+			<span class="twig">"type"</span>: <span class="str">"email"</span>,
+			<span class="twig">"label"</span>: <span class="str">"email"</span>,
+			<span class="twig">"translate"</span>: <span class="tag">true</span>,
+			<span class="twig">"class"</span>: <span class="str">"input"</span>,
+			<span class="twig">"placeholder"</span>: <span class="str">"jean@exemple.fr"</span>,
+			<span class="twig">"required"</span>: <span class="tag">true</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"constraints"</span>:{
+				<span class="twig">"NotBlank"</span>: <span class="tag">true</span>,
+				<span class="twig">"Type"</span>: <span class="str">"string"</span>,
+				<span class="twig">"Email"</span>: <span class="tag">true</span>
+			}
+		}
+	}
+}
+	</pre>
+	<h3>Controller.php</h3>
+	<pre class="code">
+&lt;?php
+
+<span class="tag">namespace</span> ads\Controllers;
+
+<span class="tag">use</span> Bundles\Formulaires\Forms; <span class="comment">/* Inclusion de la classe à utiliser */</span>
+<span class="tag">class</span> <span class="twig">Contact</span> {
+	
+	<span class="tag">public function</span> <span class="data">show</span>() {
+		$response = <span class="twig">array</span>();
+
+		$forgotPwdForm = <span class="twig">Forms</span><span class="tag">::</span><span class="data">make</span>(<span class="str">'Contact'</span>); <span class="comment">/* Creation du formulaire d'après le json */</span>
+		<span class="tag">if</span> (<span class="tag">!</span>$forgotPwdForm<span class="tag">-></span><span class="data">isValid</span>()) { <span class="comment">/* Vérification du formulaire en fonction des contraintes */</span>
+			$response[<span class="str">'formContact'</span>] <span class="tag">=</span> $forgotPwdForm<span class="tag">-></span><span class="data">render</span>(); <span class="comment">/* Création du HTML à afficher */</span>
+		} <span class="tag">else</span> {
+			<span class="tag">echo</span> <span class="str">"formulaire valide !"</span>; <span class="comment">/* Traitement à effectuer */</span>
+		}
+	
+		<span class="tag">return</span> $response;
+	}
+}
+	</pre>
+	<h3>exemple.twig</h3>
+	<pre class="code">
+<span class="tag">&lt;form</span> <span class="data">method=</span><span class="str">"POST"</span> <span class="data">action=</span><span class="str">"<span class="twig">{{ href }}</span>"</span><span class="tag">&gt;</span>
+	<span class="twig">{{ form('Contact', 'name') }}</span> <span class="comment">/* Block Nom */</span>
+	<span class="twig">{{ form('Contact', 'email') }}</span> <span class="comment">/* Block email */</span>
+	<span class="tag">&lt;input</span> <span class="data">type=</span><span class="str">"submit"</span> <span class="data">name=</span><span class="str">"envoyer"</span> <span class="data">value=</span><span class="str">"envoyer"</span> <span class="tag">&gt;</span>
+<span class="tag">&lt;/form&gt;</span>
+	</pre>
+
+
+	</div>
+	
+	<h2 class="header">2. Options</h2>
+	<div class="content">
+		<h3 class="header">type</h3>
+		<div class="content">
+			<ul>
+				<li>textarea <span class="italic">(&lt;textarea&gt;&lt;/textarea&gt;)</span></li>
+				<li>text <span class="italic">(&lt;input type='text'&gt;)</span></li>
+				<li>email <span class="italic">(&lt;input type='email'&gt;)</span></li>
+				<li>number <span class="italic">(&lt;input type='number'&gt;)</span></li>
+				<li>range <span class="italic">(&lt;input type='range'&gt;)</span></li>
+				<li>money <span class="italic">(&lt;input type='number'&gt;)</span></li>
+				<li>password <span class="italic">(&lt;input type='password'&gt;)</span></li>
+				<li>search <span class="italic">(&lt;input type='search'&gt;)</span></li>
+				<li>url <span class="italic">(&lt;input type='url'&gt;)</span></li>
+				<li>hidden <span class="italic">(&lt;input type='hidden'&gt;)</span></li>
+				<li>date <span class="italic">(&lt;input type='date'&gt;)</span></li>
+				<li>choice <span class="italic">(&lt;input type='select|checkbox|radio'&gt;)</span></li>
+				<li>file <span class="italic">(&lt;input type='file'&gt;)</span></li>
+			</ul>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>
+		}
+	}
+}
+			</pre>
+		</div>
+
+
+		<h3 class="header">value</h3>
+		<div class="content">
+			<ul>
+				<li>true <span class='italic'>Pour récuperer les valeurs ou non</span></li>
+				<li>array('response') <span class='italic'>Pour affecter une valeur dès le départ</span></li>
+			</ul>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>
+		}
+	}
+}
+			</pre>
+		</div>
+
+	
+		<h3 class="header">id</h3>
+		<div class="content">
+			<p>id du champs s'i doit être différent. Sinon "name" fait office d'id.</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"id"</span>: <span class="str">"nouvel_id"</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+
+		<h3 class="header">class</h3>
+		<div class="content">
+			<p>Affecte une classe CSS à un champs</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"class"</span>: <span class="str">"nouvelle_class"</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+
+		<h3 class="header">placeholder</h3>
+		<div class="content">
+			<p>Affiche un placeholder à un champs</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"placeholder"</span>: <span class="str">"Entrer votre nom ici"</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+	
+		<h3 class="header">required</h3>
+		<div class="content">
+			<p>Affiche une étoile après le label et indique que le champs est requis</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"required"</span>: <span class="tag">true</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+
+		<h3 class="header">disabled</h3>
+		<div class="content">
+			<p>Affiche une étoile après le label et indique que le champs est requis</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"disabled"</span>: <span class="tag">true</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+
+		<h3 class="header">readonly</h3>
+		<div class="content">
+			<p>Ajoute l'option readonly au champs</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"readonly"</span>: <span class="tag">true</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+
+		<h3 class="header">maxlength</h3>
+		<div class="content">
+			<p>Ajoute l'option maxlength au champs</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"maxlength"</span>: <span class="nb">10</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+
+		<h3 class="header">size</h3>
+		<div class="content">
+			<p>Nombre de choix visible dans un select</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"size"</span>: <span class="nb">10</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+
+		<h3 class="header">choices</h3>
+		<div class="content">
+			<p>Liste de choix pour un select une radio ou une checkbox</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"choices"</span>: {
+				<span class="str">'value1'</span>: <span class="str">'display1'</span>,
+				<span class="str">'value2'</span>: <span class="str">'display2'</span>,
+				<span class="str">'value3'</span>: <span class="str">'display3'</span>
+			}
+		}
+	}
+}
+			</pre>
+		</div>
+	
+
+		<h3 class="header">list</h3>
+		<div class="content">
+			<p>Nombre de choix visible dans un select</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"list"</span>: <span class="tag">true</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+
+		<h3 class="header">multiple</h3>
+		<div class="content">
+			<p>Choix multiple pour liste (select multiple ou checkbox)</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"multiple"</span>: <span class="tag">true</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+
+		<h3 class="header">selected</h3>
+		<div class="content">
+			<p>Liste de choix selectionnés pour un select une radio ou une checkbox</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"selected"</span>: {
+				<span class="str">'value1'</span>, <span class="str">'value2'</span>, <span class="str">'value3'</span>
+			}
+		}
+	}
+}
+			</pre>
+		</div>
+	
+
+		<h3 class="header">pattern</h3>
+		<div class="content">
+			<p>ajoute un pattern au champs (HTML5)</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"pattern"</span>: <span class="str">/[0-9]+/</span>
+		}
+	}
+}
+			</pre>
+		</div>
+
+
+		<h3 class="header">step</h3>
+		<div class="content">
+			<p>ajoute l'option step au champs.</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"step"</span>: <span class="nb">3</span>
+		}
+	}
+}
+			</pre>
+		</div>
+
+
+		<h3 class="header">min</h3>
+		<div class="content">
+			<p>ajoute l'option min au champs.</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"min"</span>: <span class="nb">3</span>
+		}
+	}
+}
+			</pre>
+		</div>
+
+
+		<h3 class="header">max</h3>
+		<div class="content">
+			<p>ajoute l'option max au champs.</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"max"</span>: <span class="nb">3</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+
+		<h3 class="header">accept</h3>
+		<div class="content">
+			<p>ajoute l'option accept au champs. (ne pas oublier  enctype="multipart/form-data" dans la balise 'form')</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"accept"</span>: <span class="str">"image/*"</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+
+		<h3 class="header">maxsize</h3>
+		<div class="content">
+			<p>defini la taille maximum d'un fichier en octets</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"maxsize"</span>: <span class="nb">8000000</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+	
+		<h3 class="header">protocol</h3>
+		<div class="content">
+			<p>defini le protocole d'une url. Par defaut "http://"</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"protocol"</span>: <span class="str">"https://"</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+	
+		<h3 class="header">devise</h3>
+		<div class="content">
+			<p>Ajoute une devise après un champs</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"devise"</span>: <span class="str">"€"</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+	
+		<h3 class="header">attr</h3>
+		<div class="content">
+			<p>Permet d'ajouter n'importe quel autre attribut au champs</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"attr"</span>: <span class="str">"data-id='59'"</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+	
+		<h3 class="header">constraints</h3>
+		<div class="content">
+			<p>Permet de faire des verifications coté serveur</p>
+			<p>Exemple :</p>
+			<pre class="code">
+{
+	<span class="twig">"Username"</span>: {
+		<span class="twig">"name"</span>: <span class="str">"name"</span>, <span class="comment">/* ID et Nom d'appel de l'input */</span>
+		<span class="twig">"options"</span>: { <span class="comment">/* Options de l'input */</span>
+			<span class="twig">"type"</span>: <span class="str">"text"</span>,
+			<span class="twig">"value"</span>: <span class="tag">true</span>,
+			<span class="twig">"attr"</span>: <span class="str">"data-id='59'"</span>
+		}
+	}
+}
+			</pre>
+		</div>
+	
+	</div>
+
+	<h2 class="header">3. Contraintes</h2>
+	<div class="content">
+		<h3>Contraintes de bases</h3>
+
+		<h4 class="header">NotBlank</h4>
+		<div class="content">
+			<p>true/False</p>
+			<p>Le champs ne doit pas être vide</p>
+		</div>
+
+
+		<h4 class="header">Blank</h4>
+		<div class="content">
+			<p>true/False</p>
+			<p>Le champs doit être vide</p>
+		</div>
+
+	
+		<h4 class="header">NotNull</h4>
+		<div class="content">
+			<p>true/False</p>
+			<p>Le champs ne doit pas être null</p>
+		</div>
+
+	
+		<h4 class="header">Null</h4>
+		<div class="content">
+			<p>true/False</p>
+			<p>Le champs doit être null</p>
+		</div>
+
+	
+		<h4 class="header">True</h4>
+		<div class="content">
+			<p>true/False</p>
+			<p>Le champs doit etre true</p>
+		</div>
+
+	
+		<h4 class="header">False</h4>
+		<div class="content">
+			<p>true/False</p>
+			<p>Le champs doit etre false</p>
+		</div>
+
+	
+		<h4 class="header">Type</h4>
+		<div class="content">
+			<p>is_*/ctype_*/instanceof *</p>
+			<p>le champs doit repondre true à la fonction correspondante ex:is_numeric</p>
+		</div>
+
+	
+		<h3>Contraintes Chaines de caracteres</h3>
+
+	
+		<h4 class="header">Email</h4>
+		<div class="content">
+			<p>true/false</p>
+			<p>Le champs doit être un email</p>
+		</div>
+
+	
+		<h4 class="header">Length</h4>
+		<div class="content">
+			<p>min/max</p>
+			<p>La longueur du champs doit etre compris entre 2 nombres</p>
+		</div>
+
+	
+		<h4 class="header">Url</h4>
+		<div class="content">
+			<p>true/false</p>
+			<p>Le champs doit correspondre à un email</p>
+		</div>
+
+	
+		<h4 class="header">Regex</h4>
+		<div class="content">
+			<p>match/pattern</p>
+			<p>Le champs doit correspondre à la regex utilisée</p>
+		</div>
+
+	
+		<h4 class="header">Ip</h4>
+		<div class="content">
+			<p>version</p>
+			<p>Le champs doit correspondre à une IP suivant l'une des versions choisie</p>
+		</div>
+
+	
+	<h3>Contraintes comparatives</h3>
+
+	
+		<h4 class="header">Range</h4>
+		<div class="content">
+			<p>min/maxSize</p>
+			<p>Le nombre doit être compris entre 2 nombres</p>
+		</div>
+
+	
+		<h4 class="header">EqualTo</h4>
+		<div class="content">
+			<p>comparative array / ==</p>
+			<p>Le champs doit être egal à la contrainte</p>
+		</div>
+
+	
+		<h4 class="header">NotEqualTo</h4>
+		<div class="content">
+			<p>comparative array / !=</p>
+			<p>Le champs ne doit pas être egal à la contrainte</p>
+		</div>
+
+	
+		<h4 class="header">IdenticalTo</h4>
+		<div class="content">
+			<p>comparative array / ===</p>
+			<p>Le champs doit être identique à la contrainte</p>
+		</div>
+
+	
+		<h4 class="header">NotIdenticalTo</h4>
+		<div class="content">
+			<p>comparative array / !==</p>
+			<p>Le champs ne doit pas être identique à la contrainte</p>
+		</div>
+	
+	
+		<h4 class="header">LessThan</h4>
+		<div class="content">
+			<p>value to compare / &lt;</p>
+			<p>Le champs doit être plus petit que la contrainte</p>
+		</div>
+
+	
+		<h4 class="header">LessThanOrEqual</h4>
+		<div class="content">
+			<p>value to compare / &lt;=</p>
+			<p>Le champs doit être plus petit ou égal que la contrainte</p>
+		</div>
+
+	
+		<h4 class="header">GreaterThan</h4>
+		<div class="content">
+			<p>value to compare / &gt;</p>
+			<p>Le champs doit être plus grand que la contrainte</p>
+		</div>
+
+
+		<h4 class="header">GreaterThanOrEqual</h4>
+		<div class="content">
+			<p>value to compare / &gt;=</p>
+			<p>Le champs doit être plus grand ou égal que la contrainte</p>
+		</div>
+
+
+	<h3>Contraintes sur les dates</h3>
+
+
+		<h4 class="header">Date</h4>
+		<div class="content">
+			<p>format</p>
+			<p>La date doit être une date valide</p>
+		</div>
+
+	
+	<h3>Contraintes sur les fichiers</h3>
+
+	
+		<h4 class="header">File</h4>
+		<div class="content">
+			<p>maxSize/mimeTypes</p>
+			<p>Vérifie le fichier en fonction du mime et de la taille</p>
+		</div>
+		
+	</div>
+
+</body>
+</html>
