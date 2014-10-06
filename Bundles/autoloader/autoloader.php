@@ -27,6 +27,8 @@ $loader->registerNamespaces(array(
     'Bundles\\Formulaires'      => dirname(dirname(__DIR__)),
     'Bundles\\Translate'        => dirname(dirname(__DIR__)),
     
+    'Services'                  => dirname(dirname(__DIR__)),
+    
     //'Controllers'               => dirname(dirname(__DIR__)),
     'Models'                    => dirname(dirname(__DIR__)),
 

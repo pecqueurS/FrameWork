@@ -187,6 +187,25 @@ class Forms {
 		
 	}
 
+
+	public function getValue($name) {
+		$input = $this->input[$name];
+		if (empty($input['options']['value'])) {
+			return array();
+		}
+
+		$result = array();
+		foreach ($input['options']['value'] as $key => $value) {
+			$result[$key] = htmlentities($value, ENT_QUOTES | ENT_IGNORE, "UTF-8");
+		}
+
+		if (count($result) === 1) {
+			$result = array_shift($result);
+		}
+
+		return $result;
+	}
+
 	
 
 
