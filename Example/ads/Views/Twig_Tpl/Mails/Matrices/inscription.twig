@@ -1,0 +1,15 @@
+{% extends "main.twig" %}
+
+{% block contenu %} 
+	<h2>Inscription</h2>
+	<br>
+	<p>Voici les informations concernant votre compte. </p>
+	<br>
+	<p>Login : <b>{{ login }}</b></p>
+	<p>Mot de passe : <b>{{ pwd }}</b></p>
+	<br>
+	<p>Pour teminer votre inscription, veuillez cliquer sur le lien suivant :</p>
+	<p><a href="{{ url }}">Activer mon compte</a></p>
+	<br>
+
+{% endblock %}

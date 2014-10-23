@@ -1,0 +1,50 @@
+{% extends "main.twig" %}
+
+{% block stylesheetBase %}
+	{{ parent() }}
+   	<link rel="stylesheet" type="text/css" href="css/styleAccueil.css">
+{% endblock %}
+
+{% block contenu %} 
+	<section>	
+
+		<article id="loginForm" class="cadre">
+			<header>
+				<h2>{{ dico('forgot_pwd') }} ?</h2>
+			</header>
+			<div>
+				<form method="POST" action="{{ href }}">
+					<div id="blockServer">
+						{{ form('ForgotPwd', 'server') }}
+					</div>
+					<div id="blockLogin">
+						{{ form('ForgotPwd', 'login') }}
+						{{ form('ForgotPwd', 'email') }}
+					</div>
+					<div id="blockBtn" class="forgot_pwd">
+						<input type="submit" class="btn sendMail" name="sendMail" value="{{ dico('send_new_pwd') }}" >
+						
+						<a href="{{ url.accueil }}" class="btn back">{{ dico('back') }}</a>
+					</div>
+				</form>
+			</div>
+
+		</article>
+
+
+
+
+
+
+
+
+
+		<article id="explications">
+    {% for desc in DESC_PAGE %}
+        	<p>{{ desc }}</p>
+    {% endfor %}
+
+		</article>
+	</section>
+
+{% endblock %}

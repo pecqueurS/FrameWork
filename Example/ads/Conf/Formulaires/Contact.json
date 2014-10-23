@@ -1,0 +1,70 @@
+{
+	"Username": {
+		"name": "name",
+		"options": {
+			"type": "text",
+			"label": "name",
+			"translate": true,
+			"class": "input",
+			"placeholder": "Votre nom",
+			"required": true,
+			"value": true,
+			"maxlength": 64,
+			"constraints":{
+				"NotBlank": true,
+				"NotNull": true,
+				"Type": "string",
+				"Length":{
+					"min": 5,
+					"max": 64
+				}
+			}
+		}
+	},
+	"Email": {
+		"name": "email",
+		"options": {
+			"type": "email",
+			"label": "email",
+			"translate": true,
+			"class": "input",
+			"placeholder": "jean@exemple.fr",
+			"required": true,
+			"value": true,
+			"maxlength": 256,
+			"constraints":{
+				"NotBlank": true,
+				"NotNull": true,
+				"Type": "string",
+				"Email": true,
+				"Length":{
+					"min": 5,
+					"max": 256
+				}
+			}
+		}
+	},
+	"Message": {
+		"name": "message",
+		"options": {
+			"type": "textarea",
+			"label": "message",
+			"translate": true,
+			"class": "input",
+			"placeholder": "Votre message",
+			"required": true,
+			"value": true,
+			"maxlength": 1024,
+			"constraints":{
+				"NotBlank": true,
+				"NotNull": true,
+				"Type": "string",
+				"Length":{
+					"min": 10,
+					"max": 1024
+				}
+			}
+		}
+	}
+}
+

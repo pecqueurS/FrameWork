@@ -1,0 +1,53 @@
+{
+	"webroot": {
+		"url": "/",
+		"controller":"ads\\Controllers\\Home::show",
+		"loadUrl": "/home"
+	},
+
+	"accueil": {
+		"url": "/home",
+		"constant": "URL_ACCUEIL",
+		"controller":"ads\\Controllers\\Home::show"
+	},
+
+	"web": {
+		"url": "/web",
+		"constant": "URL_WEB",
+		"controller":"ads\\Controllers\\Web::show"
+	},
+
+	"stickers": {
+		"url": "/stickers",
+		"constant": "URL_STICKERS",
+		"controller":"ads\\Controllers\\Stickers::show"
+	},
+
+	"graphisme": {
+		"url": "/graphisme",
+		"constant": "URL_GRAPHISME",
+		"controller":"ads\\Controllers\\Graphisme::show"
+	},
+
+	"contact": {
+		"url": "/contact",
+		"constant": "URL_CONTACT",
+		"controller":"ads\\Controllers\\Contact::show"
+	},
+
+	"whoiam": {
+		"url": "/qui-sommes-nous",
+		"constant": "URL_WHOIAM",
+		"controller":"ads\\Controllers\\Whoiam::show"
+	},
+
+	"confirmInscript": {
+		"url": "/confirmInscript\\?log=([a-zA-Z0-9-_]+)&code=([a-zA-Z0-9-_]+)",
+		"constant": "URL_CONFIRM_INS",
+		"controller":"ads\\Controllers\\Home::showConfirmInscript",
+		"loadUrl": "/confirmInscript"
+	}
+
+
+
+}

@@ -1,0 +1,16 @@
+.container h3, .container h4 {
+	clear:both;
+}
+
+.container img + p {
+	margin-top:20px;
+}
+
+.container img[src='img/stickers2.png'] {
+	margin-top:-5px;
+}
+
+.container img[src='img/stickers3.png'] {
+	margin-top:35px;
+}
+

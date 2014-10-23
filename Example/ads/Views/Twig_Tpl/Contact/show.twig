@@ -1,0 +1,24 @@
+{% extends "main.twig" %}
+
+
+	{% block stylesheetBase %}
+		{{ parent() }}
+		<link rel="stylesheet" href="css/contact.css">
+	{% endblock %}
+
+	{% block container %}
+		{% set btnVal = isMailSent ? 'back' : 'send_mail' %}
+		<form method="POST" action="{{ href }}">
+			<input type="submit" class="btn sendMail" name="sendMail" value="{{ dico(btnVal) }}" >
+			<h3>Contact</h3>
+			
+			{% if (isMailSent == false) %}
+				{{ form('Contact', 'name') }}
+				{{ form('Contact', 'email') }}
+				{{ form('Contact', 'message') }}
+			{% else %}
+				<p style="clear:both;margin-top:60px;text-align:center;">Votre message à bien été envoyé. <br>Nous vous répondrons le plus rapidement possible.</p>
+			{% endif %}
+		</form>
+		
+	{% endblock %}

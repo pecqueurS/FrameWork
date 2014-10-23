@@ -1,0 +1,10 @@
+.container h3, .container h4 {
+	clear:both;
+}
+
+.img-right,
+.img-left {
+	border:1px solid orange;
+	border-radius:7px;
+	box-shadow: 0 0 4px orange;
+}

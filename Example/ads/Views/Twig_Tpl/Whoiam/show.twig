@@ -1,0 +1,84 @@
+{% extends "main.twig" %}
+
+
+	{% block stylesheetBase %}
+		{{ parent() }}
+		<link rel="stylesheet" href="css/whoiam.css">
+	{% endblock %}
+
+	{% block container %}
+		<h3>Qui sommes nous ? </h3>
+
+		<p>Nous sommes une agence de communication indépendante spécialisée dans le Web, les Stickers ainsi que le Graphisme. Azur Design & Solution, présente depuis 2010 sur Nice(06) et ses environs, vous accompagne tout au long de votre projet. </p>
+		<div class="images whoiam">
+			<div class="image">
+				<img src="img/nice.jpg">
+			</div>
+		</div>
+		<p>L'ensemble de nos compétences, perfectionnées quotidiennement grace à une veille technologique, nous permettent, selon l'envergure et la nature de votre projet, de vous proposer une solution adaptée à vos exigences et votre budget.</p>
+
+		<h3>Que faisons-nous ?</h3>
+
+		<p>Nous répondons à vos besoins dans les domaines du web, du graphisme et du marquage adhésif (stickers), en étant à vos cotés durant toutes les étapes de votre projet. </p>
+		<p>Présent dans de nombreux aspects de la communication, nous vous proposons nos services afin de vous accompagner dans le développement de votre entreprise. </p>
+		<p>Nos domaines de compétences :</p>
+		<div class="images whatwedo">
+			<div class="image">
+				<img src="img/www.jpg">
+				<p>Internet</p>
+			</div>
+			<div class="image">
+				<img src="img/stickers.jpg">
+				<p>Stickers</p>
+			</div>
+			<div class="image">
+				<img src="img/graphisme.jpg">
+				<p>Graphisme, Identité visuelle</p>
+			</div>
+		</div>
+		<h3>Une équipe à vos côtés</h3>
+
+		<p>Le suivi de votre projet de A à Z nous permet de vous proposer des services indispensables à nos yeux comme l'écoute, la flexibilité ou encore la réactivité</p>
+
+		<h3>Notre savoir-faire</h3>
+
+		<p>Nous utilisons pour vous satisfaire plusieurs technologies, logiciels et outils : </p>
+		<img class="img-right" src="img/logiciels.jpg">
+		<ul id="outils">
+			<li>Photoshop</li>
+			<li>Illustrator</li>
+			<li>Javascript et Jquery</li>
+			<li>PHP</li>
+			<li>AJAX</li>
+			<li>W3C</li>
+			<li>SQL - Bases de données</li>
+			<li>Linux</li>
+			<li>Traceurs à découpe</li>
+			<li>Vinyls de haute qualité</li>
+		</ul>
+
+		<h3>Déroulement de votre projet</h3>
+
+		<img class="img-left" src="img/stepByStep.jpg">
+		<p>Lors du premier contact, nous vous poserons un grand nombre de question afin de mieux cerner votre projet, vos attentes, vos contraintes. Nous nous plongerons dans votre activité afin de mieux comprendre vos besoins et vos objectifs. Cette approche nous permet de trouver des solutions adaptées dans le respect de votre budget.</p>
+		<p>Puis, nos collaborateurs établierons une maquette de votre projet afin que vous puissiez avoir un aperçu de la finalité.</p>
+		<p>Après une validation commune du "cahier des charges" et du calendrier à suivre, notre équipe mettra tout en oeuvre pour vous satisfaire dans le respect du planning établi afin de donner vie à votre projet.</p>
+		<p>Durant toute la période de production, nous vous accompagnons et validons ensemble chaque étape de votre projet ce qui vous permet de garder le contrôle.</p>
+	
+		<h3>Pourquoi nous choisir ?</h3>
+		
+		<h4>Accompagnement</h4>
+		<img class="img-right" src="img/accompagner.jpg">
+		<p>A la fois techniciens et conseillers, nos collaborateurs vous accompagnent dans toutes les étapes de votre projet. Toujours présents et attentifs à vos demandes et interrogations, ils vous guiderons tout au long de notre collaboration.</p>
+
+		<h4>Service de qualité</h4>
+		<img class="img-left" src="img/quality.jpg">
+		<p>Quelque soit votre demande, nous vous proposons un service complet et de qualité, s'appuyant sur des technologies récentes et maitrisées. </p>
+		<p>Que ce soit par des graphismes de qualité, un code propre et maintenable, un design unique ou encore la proposition de modules complémentaires comme un système de gestion de contenu, d'analyse de trafic ou autres, nous mettons tout notre savoir faire à votre disposition.</p>
+
+		<h4>Maitrise du budget</h4>
+		<img class="img-right" src="img/budget.jpg">
+		<p>Parce que notre devise nous rappelle que chaque problème a sa solution, nous vous ferons une proposition quelque soit le type ou l'envergure de votre projet.</p>
+		<br>
+		<p><a href="{{ url.contact }}">Contactez-nous</a> et parlons-en !</p>
+	{% endblock %}

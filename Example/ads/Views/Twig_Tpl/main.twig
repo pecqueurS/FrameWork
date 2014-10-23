@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <title>{% block title %}{{ dico(pageRef)|title }}{% endblock %} | Azur Design & Solution</title>
+
+{% block stylesheetBase %}
+	<link rel="stylesheet" href="fonts/stylesheet.css">
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/perfect-scrollbar.css">
+	<link rel="stylesheet" href="css/style.css">
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/perfect-scrollbar.js"></script>
+	<script type="text/javascript" src="js/style.js"></script>
+{% endblock %}
+
+		<link id="page_favicon" href="/favicon.ico" rel="icon" type="image/x-icon" />
+	</head>
+<body>
+	<header>
+		<div id="logo">
+			<img src="img/logo.png">
+		</div>
+		<div id="title">
+			<h1>Azur Design & Solution</h1>
+			<h2>{{ dico('slogan') }}</h2>
+		</div>
+		<div id="lang">
+			{% block backLink %}<a href="{{ url.webroot }}">{{ dico('home')|title }}</a>{% endblock %}
+			<img src="img/lang.png">
+			<div>
+				<form method='POST'>
+					<input type="submit" name="lang_fr" value="Français" class="{{ session.lang == 'fr' ? 'selected' }}">
+					<input type="submit" name="lang_en" value="English" class="{{ session.lang == 'en' ? 'selected' }}">
+				</form>
+			</div>
+		</div>
+	</header><!-- /header -->
+
+	
+	<section class="right">
+		<nav id="menu">
+			<ul>
+				<li{{ pageRef == 'web' ? ' class="selected"' }}><a href="{{ url.web }}">{{ dico('web')|title }}</a></li>
+				<li{{ pageRef == 'stickers' ? ' class="selected"' }}><a href="{{ url.stickers }}">{{ dico('stickers')|title }}</a></li>
+				<li{{ pageRef == 'graphisme' ? ' class="selected"' }}><a href="{{ url.graphisme }}">{{ dico('graphisme')|title }}</a></li>
+			</ul>
+		</nav>
+	</section>
+
+	<section class="center">
+		<div class="container">
+			{% block container %}{% endblock %}
+		</div>
+	</section><!-- /section -->
+
+	<section class="left">
+		<div id="subTitles">
+			<h3>{{ dico('createWeb')|title }}</h3>
+			<h3>{{ dico('createStickers')|title }}</h3>
+			<h3>{{ dico('createGraphics')|title }}</h3>
+		</div>
+		<p id="devis">{{ dico('freeQuote')|upper }}</p>
+		<div id="contact" class="btn">
+			<a href="{{ url.contact }}">
+				<img src="img/contact.png">
+				<span>{{ dico('contact')|title }}</span>
+			</a>
+		</div>
+	</section>
+
+	<footer class="left">
+		<div id="avatar">
+			<a href="{{ url.whoiam }}">
+				<img src="img/avatar.png">
+				<h2>Stephane Pecqueur</h2>
+				<h3>{{ dico('job')|title }}</h3>
+			</a>
+		</div>
+	</footer>
+
+	<footer class="right">
+		<div id="linksBtn" class="btn">
+			<a>
+				<img src="img/links.png">
+				<span>Liens</span>
+			</a>
+		</div>
+		<nav id="links">
+			<ul>
+				<li><a href="https://fr-fr.facebook.com/AzurDesignSolution" class="icon icon-facebook"><span>Facebook</span></a></li>
+				<li><a href="http://portfolio.azurdesignsolution.com/" class="icon icon-portfolio"><span>Portfolio</span></a></li>
+				<li><a href="http://fr.viadeo.com/fr/profile/stephane.pecqueur2" class="icon icon-viadeo"><span>Viadeo</span></a></li>
+				<li><a href="{{ url.whoiam }}" class="icon icon-whoiam"><span>Qui sommes-nous ?</span></a></li>
+			</ul>
+		</nav>
+	</footer><!-- /footer -->
+</body>
+</html>

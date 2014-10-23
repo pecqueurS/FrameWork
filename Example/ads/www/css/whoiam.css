@@ -1,0 +1,57 @@
+.images {
+	text-align: center;
+}
+
+.image {
+	display: inline-block;
+	width:25%;
+	vertical-align: top;
+	margin:5px;
+}
+
+.image img {
+	width:100%;
+	border:1px solid orange;
+	border-radius:7px;
+	box-shadow: 0 0 4px orange;
+}
+
+.image p {
+	margin-top:20px;
+}
+
+.whatwedo {
+	margin-top:40px;
+}
+
+.whatwedo .image:first-of-type img {
+	-webkit-transform: rotate(-15deg);
+	-ms-transform: rotate(-15deg);
+	-o-transform: rotate(-15deg);
+	transform: translateZ(1px) rotate(-15deg);
+}
+
+.whatwedo .image:nth-of-type(2) img {
+	-webkit-transform: rotate(2deg);
+	-ms-transform: rotate(2deg);
+	-o-transform: rotate(2deg);
+	transform: translateZ(1px) rotate(2deg);
+}
+
+.whatwedo .image:last-of-type img {
+	-webkit-transform: rotate(12deg);
+	-ms-transform: rotate(12deg);
+	-o-transform: rotate(12deg);
+	transform: translateZ(1px) rotate(12deg);
+}
+
+#outils {
+	margin-top:20px;
+}
+
+.img-right,
+.img-left {
+	border:1px solid orange;
+	border-radius:7px;
+	box-shadow: 0 0 4px orange;
+}

@@ -1,0 +1,29 @@
+{% extends "main.twig" %}
+
+
+	{% block stylesheetBase %}
+		{{ parent() }}
+		<link rel="stylesheet" href="css/web.css">
+	{% endblock %}
+
+	{% block container %}
+		<h3>Un Site Web pour vous faire connaitre</h3>
+		<img class="img-right" src="img/monSite.jpg">
+		<p>Aujourd'hui, le web est devenu incontournable. Quelque soit votre domaine d'activité, votre présence sur internet est indispensable. </p>
+		<p>Que se soit pour vous faire connaitre, développer votre activité, défendre une idée ou pour tout autre projet, Azur Design Solution est là pour vous.</p>
+		<p>Nous faire confiance, c'est opter pour une solution personnalisée avec un accompagnement à chaque étape du projet. </p>
+
+		<h3>Le déroulement</h3>
+		<img class="img-left" src="img/stepByStep.jpg">
+		<p>Tout d'abord, après plusieurs entretiens afin de cerner au mieux vos attentes, nous vous proposons une maquette de votre projet reprenant les points que nous aurons abordés ensemble.</p>
+		<p>Après validation de cette maquette et du cahier des charges, nous vous proposerons un planing de production vous permettant ainsi de voir l'évolution du projet au fur et à mesure de sa réalisation.</p>
+		<p>Enfin, nous vous livrons votre site web après avoir vu ensemble, point après point que notre solution correspond à vos attentes.</p>
+
+		<h3>Le meilleur pour votre projet</h3>
+		<img class="img-right" src="img/languages.jpg">
+		<p>Pour cela, nous utilisons des technologies à la pointe dans ce domaine tout en alliant un design unique et dans l'air du temps.</p>
+		<p>Notre code est évolutif ce qui permet une durabilité de votre projet dans le temps. De plus, nos pages web sont codés de façon à faciliter le référencement naturel de votre site sur les moteurs de recherche.</p>
+		<p>Nous mettons à votre disposition un "back office" (arrière-boutique), vous permettant de gérer votre site par vous-même. Vous pourrez en fonction de la nature de votre projet, ajouter ou supprimer des articles, mettre à jour votre catalogue, surveiller la fréquentation de votre site.</p>
+		
+		<p><br>Que ce soit pour la création d'un nouveau site, ou la refonte d'un existant, nous vous proposons une solution complète allant de l'élaboration à l'hebergemment de votre projet.</p>
+	{% endblock %}

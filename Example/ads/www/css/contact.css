@@ -1,0 +1,48 @@
+.container h3 {
+	clear:none !important;
+}
+
+.container-form {
+	margin: 20px auto;
+	clear: both;
+}
+
+.label-form {
+	display: block;
+	margin-bottom:5px;
+}
+
+.input {
+	display:block;
+	width:calc(100% - 40px);
+	padding:15px 20px;
+	box-shadow: inset 1px 1px 3px #333;
+	background: white;
+	border:1px solid black;
+	border-radius: 3px;
+}
+
+.input:focus {
+	border-color: orange;
+}
+
+.error-form {
+	color:orange;
+}
+
+#message {
+	resize: none;
+	overflow-y:auto;
+	height: 300px;
+	line-height: 24px;
+}
+
+.sendMail {
+	float:right;
+	padding: 10px 15px;
+	border:none;
+	text-shadow: 2px 2px 3px black;
+    vertical-align: middle;
+    color:white;
+    font-size:18px;
+}

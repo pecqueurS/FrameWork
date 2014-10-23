@@ -1,0 +1,72 @@
+{
+    "appName": "ads",
+    "serveurs" : {
+        "windows": {
+            "name": "",
+            "protocole": "",
+            "host": "",
+            "bdd_Database": "",
+            "bdd_username": "",
+            "bdd_password": "",
+            "bdd_bddServer": "",
+            "smtp": "",
+            "smtp_port": ""
+        },
+
+        "linux": {
+            "name": "Azur design & Solution",
+            "protocole": "http",
+            "host": "debian.azurdesignsolution.dev",
+            "bdd_Database": "ads",
+            "bdd_username": "root",
+            "bdd_password": "oscar",
+            "bdd_bddServer": "localhost",
+            "smtp": "smtp.azurdesignsolution.com",
+            "smtp_port": "25"
+        },
+
+        "reseau": {
+            "name": "Azur design & Solution",
+            "protocole": "http",
+            "host": "192.168.1.36",
+            "bdd_Database": "ads",
+            "bdd_username": "root",
+            "bdd_password": "oscar",
+            "bdd_bddServer": "localhost",
+            "smtp": "smtp.azurdesignsolution.fr",
+            "smtp_port": "25"
+        },
+
+        "distant": {
+            "name": "Azur design & Solution",
+            "protocole": "http",
+            "host": "xxx",
+            "bdd_Database": "xxx",
+            "bdd_username": "xxx",
+            "bdd_password": "xxx",
+            "bdd_bddServer": "xxx",
+            "smtp": "nso.ovh.net"
+        }
+
+    },
+
+    "emails": {
+        "dev": [
+            "dev@azurdesignsolution.com"
+        ],
+        "admin": [
+            "stephane.pecqueur@azurdesignsolution.com"
+        ], 
+        "webmaster": [
+            "webmaster@azurdesignsolution.com"
+        ]
+    },
+
+    "timezone": "Europe/Paris",
+
+    "environment":  "DEV",
+
+    "constantes": {},
+
+    "translateType2": "bdd"
+}
