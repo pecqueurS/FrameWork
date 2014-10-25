@@ -40,8 +40,7 @@ class BDD {
 
 		/* check connection */
 		if (\mysqli_connect_errno()) {
-		    printf("Connect failed: %s\n", \mysqli_connect_error());
-		    exit();
+			exit();
 		}
 
 		// Ajout de l'extension stmt si $statement est fourni
@@ -61,11 +60,7 @@ class BDD {
 
 	public function __toString()
 	{
-		$toret = "<p>Vous êtes connecté sur $this->serveur en tant que $this->user</p>\n";
-		$toret .= "<p>Vous travaillez avec la base $this->base</p>\n";
-		$toret .= "<p>La requête en cours est : $this->requete</p>\n";
-		
-		$toret = "";
+		$toret = "BDD";
 
 		return $toret;
 	}
@@ -199,7 +194,7 @@ class BDD {
 		
 		// Traîtement d'erreur
 		if($this->requete_en_cours === false) { // Erreur lors de la requête
-				echo "<p>La requête a échouée</p>".$this;
+				trigger_error("Error request SQL : $sql", E_USER_ERROR);
 				return false;
 		}
 		return true;
@@ -211,7 +206,7 @@ class BDD {
 	{
 		
 		if($this->requete_en_cours === false) { // Pas de requête en cours
-			echo "<p>Il n'y a pas de requête en cours !</p>".$this;
+			trigger_error("no current request", E_USER_ERROR);
 			$this->ligne_en_cours = false;
 		} else { // ligne_en_cours contient le tableau retourné par mysqli_fetch_assoc
 			$this->ligne_en_cours = $this->requete_en_cours->fetch_assoc();

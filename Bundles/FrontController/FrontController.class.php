@@ -146,40 +146,6 @@ class FrontController {
 		// Affiche la vue
 		echo Tpl::display($this->response, "/App/" . Conf::getAppName() . "/Views/Twig_Tpl");
 	}
-
-
-/*
-
-
-
-
-
-
-
-
-
-/*
-
-// Appel templates
-require_once (TEMPLATES."template.php");*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 

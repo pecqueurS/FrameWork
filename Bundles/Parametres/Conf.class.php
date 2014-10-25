@@ -90,18 +90,14 @@ class Conf {
 
 
 	private function checkEnvironment() {
-		switch ($this->config->getEnvironment()) {
-			case 'PROD':
-				error_reporting(0);
-				set_error_handler(function() { $this->userErrorHandler(); } );
-				break;
-			
-			default:
-				error_reporting(E_ALL|E_STRICT);
-				ini_set ('display_errors', 'On');  // affiche les erreurs et les fonctions obsoletes en mode developpement
-				ini_set('error_log',__DIR__."/../../php_error.log"); // enregistre les erreurs dans un fichier 'php_error.log'
-				break;
-		}
+		error_reporting(0);
+		ini_set ('display_errors', 'Off');  // cache les erreurs et les fonctions obsoletes en mode developpement
+				
+		\ErrorHandling::$env = $this->config->getEnvironment();
+  		register_shutdown_function('ErrorHandling::check_others');/* Paramètres */
+
+		\ErrorHandling::$display = $this->config->getLogType();
+		set_error_handler('ErrorHandling::' . $this->config->getEnvironment());
 	}
 
 
@@ -218,11 +214,6 @@ class Conf {
 		if ($this->config->getTranslateType() !== false) {
 			self::$translateType = $this->config->getTranslateType();
 		}
-		/*try {
-			self::$translateType = $this->config->getTranslateType();
-		} catch (Exception $e) {
-			
-		}*/
 	}
 
 
@@ -251,57 +242,7 @@ class Conf {
 	}
 	
 
-	private function userErrorHandler($errno, $errmsg, $filename, $linenum, $vars){
-		// Date et heure de l'erreur
-		$dt = date("Y-m-d H:i:s (T)");
-
-		// Définit un tableau associatif avec les chaînes d'erreur
-		// En fait, les seuls niveaux qui nous interessent
-		// sont E_WARNING, E_NOTICE, E_USER_ERROR,
-		// E_USER_WARNING et E_USER_NOTICE
-		$errortype = array (
-			E_ERROR => "Erreur",
-			E_WARNING => "Alerte",
-			E_PARSE => "Erreur d'analyse",
-			E_NOTICE => "Note",
-			E_CORE_ERROR => "Core Error",
-			E_CORE_WARNING => "CoreWarning",
-			E_COMPILE_ERROR => "Compile Error",
-			E_COMPILE_WARNING => "Compile Warning",
-			E_USER_ERROR => "Erreur spécifique",
-			E_USER_WARNING => "Alerte spécifique",
-			E_USER_NOTICE => "Note spécifique",
-			E_STRICT => "Runtime Notice"
-		);
-
-		// Les niveaux qui seront enregistrés
-		$user_errors = array(E_ERROR, E_WARNING, E_PARSE, E_USER_ERROR, E_USER_WARNING, E_USER_NOTICE);
-		$err = "<errorentry>\n";
-		$err .= "\t<datetime>" . $dt . "</datetime>\n";
-		$err .= "\t<errornum>" . $errno . "</errornum>\n";
-		$err .= "\t<errortype>" . $errortype[$errno] . "</errortype>\n";
-		$err .= "\t<errormsg>" . $errmsg . "</errormsg>\n";
-		$err .= "\t<scriptname>" . $filename . "</scriptname>\n";
-		$err .= "\t<scriptlinenum>" . $linenum . "</scriptlinenum>\n";
-		if (in_array($errno, $user_errors)) {
-		$err .= "\t<vartrace>".wddx_serialize_value($vars,"Variables")."</vartrace>\n";
-		}
-		$err .= "</errorentry>\n\n";
-
-		// sauvegarde de l'erreur, et mail si c'est critique
-		error_log($err, 3, __DIR__."/../../error.xml");
-		if ($errno == E_USER_ERROR ||  $errno == E_USER_WARNING ||  $errno == E_USER_NOTICE) {
-			mail("stephane.pecqueur@gmail.com",$errno,$err);
-			//echo "<p>Erreur utilisateur critique !</p>";
-			/*header("Location: ".URL_ERR);*/
-			header("HTTP/1.1 500 Internal Server Error");
-			echo file_get_contents( __DIR__."/../../www/error/500.html"); 
-			exit();
-		}
-	}
-
-
-	public function __callStatic($method, $arguments) {
+	public static function __callStatic($method, $arguments) {
 		$argument = lcfirst(substr($method,3)); 
 		if (isset(self::$$argument) && self::$$argument !== null) {
 			return self::$$argument;

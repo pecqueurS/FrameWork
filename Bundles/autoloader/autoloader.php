@@ -32,7 +32,7 @@ $loader->registerNamespaces(array(
     //'Controllers'               => dirname(dirname(__DIR__)),
     'Models'                    => dirname(dirname(__DIR__)),
 
-    'ads'                      => dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'App',
+    'WishList'                  => dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'App',
     
        
 ));
@@ -43,6 +43,9 @@ $loader->registerNamespaces(array(
 
 $loader->register();
 
+
+// Load ErrorHandler Class
+require_once dirname(__DIR__).'/ErrorHandling/ErrorHandling.class.php';
 
 
 

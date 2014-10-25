@@ -2,6 +2,7 @@
 ## Eclipse
 #################
 App/
+log/
 
 *.pydevproject
 .project

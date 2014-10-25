@@ -20,6 +20,10 @@ Abstract class Dico extends Tpl {
 			case 'json':
 
 				break;
+		
+			case 'noTranslate':
+
+				break;
 		}
 		
 	}

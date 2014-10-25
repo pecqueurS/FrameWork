@@ -8,11 +8,9 @@ use Bundles\FrontController\FrontController;
 // Inclus l'autoloader
 require_once ("../Bundles/autoloader/autoloader.php");
 
-
-/* Paramètres */
 $confFiles = array(
-		"app" => "ads/Conf/app.json",
-		"routing" => "ads/Conf/Routing/routing.json",
+		"app" => "WishList/Conf/app.json",
+		"routing" => "WishList/Conf/Routing/routing.json",
 );
 Conf::init($confFiles);
 
