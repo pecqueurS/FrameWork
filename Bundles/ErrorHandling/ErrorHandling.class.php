@@ -43,22 +43,26 @@ Abstract class ErrorHandling {
 
 
 	public static function PROD($errno, $errmsg, $filename, $linenum, $vars) {
-		self::setDate();
-		self::setError($errno, $errmsg, $filename, $linenum, $vars);
+		if ($errno !== null) {
+			self::setDate();
+			self::setError($errno, $errmsg, $filename, $linenum, $vars);
 
-		self::saveToXML();
-		self::saveToLOG();
-	
-		self::redirectURL();
+			self::saveToXML();
+			self::saveToLOG();
+		
+			self::redirectURL();
+		}
 	}
 
 
 	public static function DEV($errno, $errmsg, $filename, $linenum, $vars) {
-		self::setDate();
-		self::setError($errno, $errmsg, $filename, $linenum, $vars);
+		if ($errno !== null) {
+			self::setDate();
+			self::setError($errno, $errmsg, $filename, $linenum, $vars);
 
-		self::saveToLOG();
-		self::displayErrors();
+			self::saveToLOG();
+			self::displayErrors();
+		}
 	}
 
 
@@ -113,7 +117,7 @@ Abstract class ErrorHandling {
 
     private static function saveToLOG() {
 		// Les niveaux qui seront enregistrés
-		$user_errors = array(E_ERROR, E_WARNING, E_PARSE, E_USER_ERROR, E_USER_WARNING, E_USER_NOTICE);
+		$user_errors = array_keys(self::$errortype);
 
 		$err = "********************************************************************************\n";
 		$err .= "[" . self::$now . "] " . self::$errno . '.' . self::$errortype[self::$errno] . " :\n";

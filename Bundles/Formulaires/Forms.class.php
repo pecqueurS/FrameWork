@@ -18,6 +18,7 @@ class Forms {
 	public $dirForm;
 
 	public static $renderHTML = array();
+	public static $isValid = false;
 
 	public $nameForm = 'form1';
 	public $type;
@@ -94,8 +95,8 @@ class Forms {
 				$result = false;
 			}
 		}
+		self::$isValid = $result;
 		return $result;
-		
 	}
 
 

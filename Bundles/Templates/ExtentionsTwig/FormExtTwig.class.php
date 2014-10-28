@@ -31,7 +31,7 @@ class FormExtTwig extends \Twig_Extension
 
     public function twig_get_form($nameForm, $nameInput)
     {
-        return Forms::$renderHTML[$nameForm][$nameInput];
+        return (Forms::$isValid) ? '' : Forms::$renderHTML[$nameForm][$nameInput];
     }
 
 }
