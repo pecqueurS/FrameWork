@@ -15,13 +15,6 @@ class DictionnaireModel extends Model {
 		$this->getDico();
 	}
 
-	public static function init() {
-		$mod = new DictionnaireModel();
-		return $mod;
-	}
-
-
-
 	protected function getDico(){
 		$result = $this->db->addJoin("langues", array("lan_id", "dic_langues_id"))
 								->addRule("lan_designation", $_SESSION["lang"])

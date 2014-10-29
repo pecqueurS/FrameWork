@@ -44,13 +44,6 @@ class Db extends BDD {
 		return $this;
 	}
 
-	// Recherche les colonnes d'une table
-	protected function searchFields($table) {
-		$sql = "SHOW COLUMNS FROM ".$table;
-		$this->requete($sql);
-		$this->fields[$table] = $this->retourne_tableau();
-	}
-
 	// Ajoute une jointure
 	public function addJoin($table, $keys, $type="INNER") {
 		$this->joins[] = array(
@@ -91,6 +84,61 @@ class Db extends BDD {
 	public function addGroup($field, $complex="") { // ex: $complex = HAVING prix_moyen <= 10
 		$this->groups[] = array("field"=>$field, "complex"=>$complex);
 		return $this;
+	}
+
+		// Renvoi la requete
+	public function getRequest() {
+		return $this->construct_request;
+	}
+
+	// Renvoi les champs des colonnes sous forme d'un simple tableau
+	public function getFields() {
+		foreach ($this->fields as $table) {
+			foreach ($table as $field) {
+				$result[] = $field;
+			}
+		}
+		return $result;
+	}
+
+	// Fait un SELECT
+	public function select($fields=array("*")) {
+		$sql = $this->construct_request("select",array("fields"=>$fields));
+		return $this->exec($sql);
+	}
+
+	// Fait un INSERT INTO
+	public function insert($values, $fields=false) {
+		if($fields===false) {
+			$fields = array();
+			foreach ($this->fields[$this->tables[0]] as $field) {
+				$fields[] = $field["Field"];
+			}
+		}
+		$sql = $this->construct_request("insert",array("fields"=>$fields, "values"=>$values));
+		return $this->exec($sql);
+	}
+
+	public function update($values, $fields) {
+		$sql = $this->construct_request("update",array("fields"=>$fields, "values"=>$values));
+		return $this->exec($sql);
+	}
+
+	public function delete() {
+		$sql = $this->construct_request("delete");
+		return $this->exec($sql);
+	}
+
+	public function perso($sql) {
+		$this->construct_request = $sql;
+		return $this->exec($sql);
+	}
+
+	// Recherche les colonnes d'une table
+	protected function searchFields($table) {
+		$sql = "SHOW COLUMNS FROM ".$table;
+		$this->requete($sql);
+		$this->fields[$table] = $this->retourne_tableau();
 	}
 
 	// Contruit la requete
@@ -172,7 +220,7 @@ class Db extends BDD {
 		if(is_array($this->rules)) {
 			for ($i=0; $i < count($this->rules) ; $i++) { 
 				$this->construct_request .= (($i==0) ? "WHERE " : "AND ").$this->rules[$i]['field']." " ;
-
+				var_dump($this->rules[$i]['field'],$this->rules[$i]['value']);
 				$values = $this->stmtPrepare($this->rules[$i]['field'],$this->rules[$i]['value']);
 
 				switch ($this->rules[$i]['type']) {
@@ -236,49 +284,6 @@ class Db extends BDD {
 		
 	}
 
-	// Renvoi la requete
-	public function getRequest() {
-		return $this->construct_request;
-	}
-
-	// Renvoi les champs des colonnes sous forme d'un simple tableau
-	public function getFields() {
-		foreach ($this->fields as $table) {
-			foreach ($table as $field) {
-				$result[] = $field;
-			}
-		}
-		return $result;
-	}
-
-	// Fait un SELECT
-	public function select($fields=array("*")) {
-		$sql = $this->construct_request("select",array("fields"=>$fields));
-		return $this->exec($sql);
-	}
-
-	// Fait un INSERT INTO
-	public function insert($values, $fields=false) {
-		if($fields===false) {
-			$fields = array();
-			foreach ($this->fields[$this->tables[0]] as $field) {
-				$fields[] = $field["Field"];
-			}
-		}
-		$sql = $this->construct_request("insert",array("fields"=>$fields, "values"=>$values));
-		return $this->exec($sql);
-	}
-
-	public function update($values, $fields) {
-		$sql = $this->construct_request("update",array("fields"=>$fields, "values"=>$values));
-		return $this->exec($sql);
-	}
-
-	public function delete() {
-		$sql = $this->construct_request("delete");
-		return $this->exec($sql);
-	}
-
 	protected function setBind($bind){
 		$this->bind = $bind;
 		return $this;
@@ -287,11 +292,6 @@ class Db extends BDD {
 	protected function setValues($values){
 		$this->values = $values;
 		return $this;
-	}
-
-	public function perso($sql) {
-		$this->construct_request = $sql;
-		return $this->exec($sql);
 	}
 
 	
