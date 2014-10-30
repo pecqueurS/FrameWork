@@ -173,9 +173,9 @@
 <span class="tag">class</span> <span class="twig">Contact</span> {
 	
 	<span class="tag">public function</span> <span class="data">show</span>() {
-		$response = <span class="twig">array</span>();
+		$response <span class="tag">=</span> <span class="twig">array</span>();
 
-		$forgotPwdForm = <span class="twig">Forms</span><span class="tag">::</span><span class="data">make</span>(<span class="str">'Contact'</span>); <span class="comment">/* Creation du formulaire d'après le json */</span>
+		$forgotPwdForm <span class="tag">=</span> <span class="twig">Forms</span><span class="tag">::</span><span class="data">make</span>(<span class="str">'Contact'</span>); <span class="comment">/* Creation du formulaire d'après le json */</span>
 		<span class="tag">if</span> (<span class="tag">!</span>$forgotPwdForm<span class="tag">-></span><span class="data">isValid</span>()) { <span class="comment">/* Vérification du formulaire en fonction des contraintes */</span>
 			$response[<span class="str">'formContact'</span>] <span class="tag">=</span> $forgotPwdForm<span class="tag">-></span><span class="data">render</span>(); <span class="comment">/* Création du HTML à afficher */</span>
 		} <span class="tag">else</span> {

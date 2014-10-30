@@ -12,10 +12,16 @@ class Model {
 	protected $table=array();
 	protected $modifiedRows=array();
 
+	protected $tableName = '';
+
+
 	public function __construct($db = null) {
 		if ($db === null) {
 			$this->db = Db::init($this->tableName);
 		} else {
+			if ($this->tableName == '') {
+				$this->tableName = $db->getDefaultTable();
+			}
 			$this->db = $db;
 			$this->loadTable();
 		}
@@ -98,9 +104,7 @@ class Model {
 				if ($row[$fields[0]] === null) {
 					$affected_rows += $this->db->insert(array_values($row));
 				} else {
-					var_dump($row);
 					$primary = array_shift($row);
-					echo '<pre>'.var_dump($primary).'</pre>';
 					$this->db->addRule($fields[0], $primary);
 					
 					$fields = array_keys($row);

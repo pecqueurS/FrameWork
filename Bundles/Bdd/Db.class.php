@@ -44,15 +44,9 @@ class Db extends BDD {
 		return $this;
 	}
 
-	// Ajoute une jointure
-	public function addJoin($table, $keys, $type="INNER") {
-		$this->joins[] = array(
-			"table"=>$table,
-			"keys"=>$keys,
-			"type"=>$type
-		);
-		$this->searchFields($table);
-		return $this;
+	// Donne la 1ere table de la liste
+	public function getDefaultTable() {
+		return $this->tables[0];
 	}
 
 	// Ajoute une condition
@@ -68,6 +62,17 @@ class Db extends BDD {
 	// Ajoute une condition complexe 
 	public function addComplexRule($rule) {
 		$this->rules = $rule;
+		return $this;
+	}
+
+	// Ajoute une jointure
+	public function addJoin($table, $keys, $type="INNER") {
+		$this->joins[] = array(
+			"table"=>$table,
+			"keys"=>$keys,
+			"type"=>$type
+		);
+		$this->searchFields($table);
 		return $this;
 	}
 
@@ -220,7 +225,7 @@ class Db extends BDD {
 		if(is_array($this->rules)) {
 			for ($i=0; $i < count($this->rules) ; $i++) { 
 				$this->construct_request .= (($i==0) ? "WHERE " : "AND ").$this->rules[$i]['field']." " ;
-				var_dump($this->rules[$i]['field'],$this->rules[$i]['value']);
+				//var_dump($this->rules[$i]['field'],$this->rules[$i]['value']);
 				$values = $this->stmtPrepare($this->rules[$i]['field'],$this->rules[$i]['value']);
 
 				switch ($this->rules[$i]['type']) {

@@ -26,10 +26,6 @@ class DictionnaireModel extends Model {
 		}
 
 	}
-
-
-
-
 }
 
 

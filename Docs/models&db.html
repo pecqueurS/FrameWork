@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Doc Bundle Models / BDD</title>
+	<link rel="stylesheet" href="">
+	<style type="text/css">
+		body {
+			counter-reset: h2;
+			counter-reset: h3;
+			counter-reset: h4;
+		}
+		h1 {
+			counter-reset: h2;
+		}
+		h2:before {
+			counter-increment:h2;
+			content: counter(h2, upper-alpha) ". ";
+		}
+		h2 {
+			counter-reset: h3;
+		}
+		h3:before {
+			counter-increment:h3;
+			content: counter(h2, upper-alpha) "."counter(h3) ". ";
+		}
+		h3 {
+			counter-reset: h4;
+		}
+		h4:before {
+			counter-increment:h4;
+			content: counter(h2, upper-alpha) "."counter(h3) "."counter(h4, lower-alpha) ". ";
+		}
+
+		.code {
+			width:calc(100% - 70px);
+			overflow: auto;
+			margin:0 20px;
+			padding:15px;
+			border-radius: 7px;
+			background: #272822;
+			color:white;
+		    tab-size:      2;
+		    -webkit-tab-size: 2;
+		    -moz-tab-size: 2;
+		    -o-tab-size:   2;
+		}
+
+		.code .tag {
+			color: #D4496C;
+		}
+		.code .data {
+			color: #009900;
+		}
+		.code .str {
+			color: #E6DB74;
+		}
+		.code .twig {
+			color: #4F9FCF;
+		}
+		.code .nb {
+			color: #6F57DD;
+		}
+		.code .comment {
+			color: #888888;
+		}
+
+		.italic {
+			font-style: italic;
+		}
+
+		.header {
+			margin:0;
+			border: 1px solid #ddd;
+		    color: #333;
+			padding: 10px 15px;
+		    cursor:pointer;
+			background-color: #f5f5f5;
+		}
+
+		.content {
+			display:none;
+			background-color: #fefefe;
+		    border: 1px solid #ddd;
+		    color: #333;
+			border-top:0;
+		    padding: 10px 15px;
+		}
+
+		.header:first-of-type {
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+		}
+		
+	</style>
+	<script src="http://code.jquery.com/jquery-1.9.0.js"></script>
+	<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		$('.header').click(function() {
+			if (!$(this).hasClass('show')) {
+				$(this).parent().find('.show').removeClass('show').next('.content').slideUp('slow');
+				$(this).next('.content').slideToggle('slow');
+				$(this).addClass('show');
+			} else {
+				$(this).next('.content').slideUp('slow');
+				$(this).removeClass('show');
+			}
+		});
+	});
+	</script>
+</head>
+<body>
+	<h1>Bundle Bdd</h1>
+
+	<h2 class="header">Initialisation</h2>
+	<div class="content">
+		<h3 class="header">Utilisation simple</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+<span class="tag">use</span> Bundles\Bdd\Model;
+
+<span class="tag">class</span> <span class="twig">UserModel</span> <span class="tag">extends</span> <span class="data">Model</span> {
+
+	<span class="tag">protected</span> $tableName <span class="tag">=</span> <span class="str">"wl_user"</span>; <span class="comment">/* Nom de la table */</span>
+
+}
+
+$test <span class="tag">=</span> <span class="twig">UserModel</span><span class="tag">::</span><span class="data">init</span>(); <span class="comment">/* Initialisation de la table */</span>
+$test<span class="tag">-></span><span class="data">loadTable</span>(); <span class="comment">/* chargement des données */</span>
+			</pre>
+		</div>
+
+		<h3 class="header">Utilisation avancée</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> Bundles\Translate\bdd;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+<span class="tag">use</span> Bundles\Bdd\Model;
+
+<span class="tag">class</span> <span class="twig">DictionnaireModel</span> <span class="tag">extends</span> <span class="data">Model</span> {
+
+	<span class="tag">protected</span> $tableName <span class="tag">=</span> <span class="str">"dictionnaire"</span>;
+	
+	<span class="tag">public function</span> <span class="twig">__construct</span>() {
+		<span class="twig">parent</span><span class="tag">::</span><span class="twig">__construct</span>();
+		$this<span class="tag">-></span><span class="data">getDico</span>(); <span class="comment">/* remplace le $test->loadTable() avec une requete plus affinée */</span>
+	}
+
+	<span class="tag">protected function</span> <span class="data">getDico</span>(){ <span class="comment">/* methode supplémentaire pour une requete particuliere */</span>
+		$result <span class="tag">=</span> $this<span class="tag">-></span>db<span class="tag">-></span><span class="data">addJoin</span>(<span class="str">"langues"</span>, <span class="twig">array</span>(<span class="str">"lan_id"</span>, <span class="str">"dic_langues_id"</span>))
+								<span class="tag">-></span><span class="data">addRule</span>(<span class="str">"lan_designation"</span>, $_SESSION[<span class="str">"lang"</span>])
+								<span class="tag">-></span><span class="data">select</span>(<span class="twig">array</span>(<span class="str">"dic_designation"</span>,<span class="str">"dic_traduction"</span>));
+
+		$this<span class="tag">-></span>table <span class="tag">=</span> <span class="twig">array</span>();
+		<span class="tag">foreach</span> ($result <span class="tag">as</span> $dico) {
+		  $this<span class="tag">-></span>table[$dico[<span class="str">"dic_designation"</span>]] <span class="tag">=</span> $dico[<span class="str">"dic_traduction"</span>];
+		}
+	}
+}
+
+$test <span class="tag">=</span> <span class="twig">UserModel</span><span class="tag">::</span><span class="data">init</span>();
+			</pre>
+		</div>
+
+		<h3 class="header">Utilisation complexe</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> Bundles\Translate\bdd;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+<span class="tag">use</span> Bundles\Bdd\Model;
+
+<span class="tag">class</span> <span class="twig">DictionnaireModel</span> <span class="tag">extends</span> <span class="data">Model</span> {
+
+}
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"dictionnaire"</span>);
+$db<span class="tag">-></span><span class="data">addJoin</span>(<span class="str">"langues"</span>, <span class="twig">array</span>(<span class="str">"lan_id"</span>, <span class="str">"dic_langues_id"</span>))
+   <span class="tag">-></span><span class="data">addRule</span>(<span class="str">"lan_designation"</span>, $_SESSION[<span class="str">"lang"</span>]); <span class="comment">/* ajoute l'instanciation de la db et fixe les conditions d'abord */</span>
+
+$test <span class="tag">=</span> <span class="twig">UserModel</span><span class="tag">::</span><span class="data">init</span>($db); <span class="comment">/* Instancie le model avec l'objet db en parametre */</span>
+			</pre>
+		</div>
+	</div>
+
+
+
+	<h2 class="header">Utilisation</h2>
+	<div class="content">
+		<h3 class="header">Selection simple</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+<span class="tag">use</span> Bundles\Bdd\Model;
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"wl_user"</span>);
+$db<span class="tag">-></span><span class="data">addRule</span>(<span class="str">"use_id"</span>, <span class="nb">1</span>);
+	   
+$test <span class="tag">=</span> <span class="twig">UserModel</span><span class="tag">::</span><span class="data">init</span>($db);
+$result <span class="tag">=</span> $test<span class="tag">-></span><span class="data">getValues</span>(<span class="str">'use_name'</span>); <span class="comment">/* champs à chercher */</span>
+			</pre>
+			<p>Resultat : </p>
+			<pre class="code">
+array(1) { 
+	'use_name' => string(5) "test1" 
+} 
+			</pre>
+		</div>
+
+		<h3 class="header">Selection complexe</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+<span class="tag">use</span> Bundles\Bdd\Model;
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"wl_user"</span>);
+$db<span class="tag">-></span><span class="data">addRule</span>(<span class="str">"use_id"</span>, <span class="nb">1</span>);
+	   
+$test <span class="tag">=</span> <span class="twig">UserModel</span><span class="tag">::</span><span class="data">init</span>($db);
+$result <span class="tag">=</span> $test<span class="tag">-></span><span class="data">getValues</span>(
+	<span class="str">'use_name'</span>, <span class="comment">/* champs à chercher */</span>
+	<span class="twig">array</span>(
+		<span class="str">'use_id'</span> <span class="tag">=></span> <span class="twig">array</span>(<span class="nb">1</span>,<span class="nb">2</span>,<span class="nb">3</span>) <span class="comment">/* conditions */</span>
+	)
+);
+			</pre>
+			<p>Resultat : </p>
+			<pre class="code">
+array(1) { 
+	'use_name' => string(5) "test1" 
+} 
+			</pre>
+		</div>
+
+		<h3 class="header">Modification element</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+<span class="tag">use</span> Bundles\Bdd\Model;
+
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"wl_user"</span>);
+$db<span class="tag">-></span><span class="data">addRule</span>(<span class="str">"use_id"</span>, <span class="nb">1</span>);
+	   
+$test <span class="tag">=</span> <span class="twig">UserModel</span><span class="tag">::</span><span class="data">init</span>($db);
+$test<span class="tag">-></span><span class="data">setValues</span>(
+	<span class="twig">array</span>(
+		<span class="str">'use_id'</span> <span class="tag">=></span> <span class="str">'6'</span>, <span class="comment">/* selectionne l'id de la ligne */</span>
+		<span class="str">'use_name'</span> <span class="tag">=></span> <span class="str">'petit_test'</span> <span class="comment">/* nouvelle valeur du champ à modifier */</span>
+	)
+);
+$test<span class="tag">-></span><span class="data">save</span>(); <span class="comment">/* Sauvegarde les données setter */</span>
+			</pre>
+			<p>Ou en raccourcie :</p>
+			<pre class="code">
+$test<span class="tag">-></span><span class="data">setValues</span>(...)<span class="tag">-></span><span class="data">save</span>(); <span class="comment">/* Tout en une ligne */</span>
+			</pre>
+		</div>
+
+		<h3 class="header">Ajout element</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+<span class="tag">use</span> Bundles\Bdd\Model;
+
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"wl_user"</span>);
+$db<span class="tag">-></span><span class="data">addRule</span>(<span class="str">"use_id"</span>, <span class="nb">1</span>);
+	   
+$test <span class="tag">=</span> <span class="twig">UserModel</span><span class="tag">::</span><span class="data">init</span>($db);
+
+$newTest <span class="tag">=</span> <span class="twig">UserModel</span><span class="tag">::</span><span class="data">getNewEntity</span>(); <span class="comment">/* Création d'un nouvel element (de façon à être sur d'avoir toutes les colonnes) */</span>
+$newTest[<span class="str">'use_name'</span>] <span class="tag">=</span> <span class="str">'grosTest'</span>; <span class="comment">/* Remplissage des champs */</span>
+$newTest[<span class="str">'use_pwd'</span>] <span class="tag">=</span> <span class="str">'grosTest'</span>; <span class="comment">/* Remplissage des champs */</span>
+$newTest[<span class="str">'use_email'</span>] <span class="tag">=</span> <span class="str">'grosTest'</span>; <span class="comment">/* Remplissage des champs */</span>
+
+$test<span class="tag">-></span><span class="data">setValues</span>($newTest)<span class="tag">-></span><span class="data">save</span>(); <span class="comment">/* comme pour la modification l'enregistrement peut se faire à la suite du 'setValues' */</span>
+			</pre>
+		</div>
+
+		<h3 class="header">Supression element</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+<span class="tag">use</span> Bundles\Bdd\Model;
+
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"wl_user"</span>);
+$db<span class="tag">-></span><span class="data">addRule</span>(<span class="str">"use_id"</span>, <span class="nb">1</span>);
+	   
+$test <span class="tag">=</span> <span class="twig">UserModel</span><span class="tag">::</span><span class="data">init</span>($db);
+
+$test<span class="tag">-></span><span class="data">setValues</span>(<span class="twig">array</span>(<span class="str">'use_id'</span> <span class="tag">=></span> <span class="str">'6'</span>))<span class="tag">-></span><span class="data">delete</span>(); <span class="comment">/* comme pour la modification ou l'ajout, le 'delete()' (suppression) peut se faire à la suite du 'setValues' */</span>
+			</pre>
+		</div>
+
+
+	</div>
+
+
+
+	<h2 class="header">Utilisation des Criteres de Selection</h2>
+	<div class="content">
+		<h3 class="header">Initialisation</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"wl_user"</span>);
+			</pre>
+		</div>
+
+		<h3 class="header">Ajout d'une table</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"wl_user"</span>);
+$db<span class="tag">-></span><span class="data">addTable</span>(<span class="str">'table2'</span>);
+			</pre>
+		</div>
+
+		<h3 class="header">Ajoute une condition</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"wl_user"</span>);
+$db<span class="tag">-></span><span class="data">addRule</span>(<span class="str">"use_id"</span>, <span class="nb">1</span>, <span class="str">"="</span>); <span class="comment">/* comparaison pas obligatoire "=" par defaut */</span>
+<span class="comment">/* Execute la requete avec par exemple $db->select(); */</span>
+<span class="comment">/* Multiple regles possibles mais les regles s'additionnent (AND) */</span>
+			</pre>
+		</div>
+
+		<h3 class="header">Ajoute une condition complexe</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"wl_user"</span>);
+$db<span class="tag">-></span><span class="data">addRule</span>(<span class="str">"WHERE use_id = 1 OR use_id = 2"</span>); <span class="comment">/* Execute la requete avec par exemple $db->select(); */</span>
+			</pre>
+		</div>
+
+		<h3 class="header">Ajoute une jointure</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"wl_user"</span>);
+$db<span class="tag">-></span><span class="data">addJoin</span>(<span class="str">"langues"</span>, <span class="twig">array</span>(<span class="str">"lan_id"</span>, <span class="str">"use_langues_id"</span>), <span class="str">"INNER"</span>); <span class="comment">/* Le type n'est pas obligatoire 'INNER' par defaut */</span>
+			</pre>
+		</div>
+
+		<h3 class="header">Ajoute un tri</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"wl_user"</span>);
+$db<span class="tag">-></span><span class="data">addOrder</span>(<span class="str">'use_id'</span>,<span class="str">"ASC"</span>); <span class="comment">/* Le type n'est pas obligatoire 'ASC' par defaut */</span>
+			</pre>
+		</div>
+
+		<h3 class="header">Ajoute un "group by"</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"wl_user"</span>);
+$db<span class="tag">-></span><span class="data">addGroup</span>(<span class="str">'use_name'</span>, <span class="str">"HAVING use_id <= 10"</span>); <span class="comment">/* Le 2e parametre n'est pas obligatoire '' par defaut */</span>
+			</pre>
+		</div>
+
+		<h3 class="header">Faire une requete SQL</h3>
+		<div class="content">
+			<pre class="code">
+&lt;?php
+<span class="tag">namespace</span> WishList\Models;
+
+<span class="tag">use</span> Bundles\Bdd\Db;
+
+$db <span class="tag">=</span> <span class="twig">Db</span><span class="tag">::</span><span class="data">init</span>(<span class="str">"wl_user"</span>);
+
+$sql <span class="tag">=</span> <span class="str">'SELECT count() AS result FROM wl_user'</span>;
+$db<span class="tag">-></span><span class="data">perso</span>($sql);
+			</pre>
+		</div>
+
+	</div>
+	
+
+</body>
+</html>

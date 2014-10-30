@@ -92,6 +92,7 @@ class Conf {
 	private function checkEnvironment() {
 		error_reporting(0);
 		ini_set ('display_errors', 'Off');  // cache les erreurs et les fonctions obsoletes en mode developpement
+		ini_set ('html_errors', 'Off');  // cache les erreurs et les fonctions obsoletes en mode developpement
 				
 		\ErrorHandling::$env = $this->config->getEnvironment();
   		register_shutdown_function('ErrorHandling::check_others');/* Paramètres */
