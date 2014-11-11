@@ -72,7 +72,11 @@ class Forms {
 	}
 
 	public function changeOption($name, $option, $value) {
-		$this->input[$name][$option] = $value;
+		$this->input[$name]['options'][$option] = $value;
+	}
+
+	public function changeConstraint($name, $constraint, $value) {
+		$this->input[$name]['options']['constraints'][$constraint] = $value;
 	}
 
 
