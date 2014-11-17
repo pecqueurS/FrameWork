@@ -382,20 +382,23 @@ class Inspector {
 	        	case 'fr':
 	        		// jj-mm-aaaa
 	        		$pattern = '#^(\d{2})-(\d{2})-(\d{4})$#';
+	        		$order = [2,1,3];
 	        		break;
 	        	
 	        	case 'en':
 	        		// mm/jj/aaaa
 	        		$pattern = '#^(\d{2})/(\d{2})/(\d{4})$#';
+	        		$order = [1,2,3];
 	        		break;
 	        	
 	        	default:
 	        		// aaaa-mm-jj
 	        		$pattern = '#^(\d{4})-(\d{2})-(\d{2})$#';
+	        		$order = [2,3,1];
 	        		break;
 	        	}
 
-	        if (!preg_match($pattern, $value, $matches) || !checkdate($matches[2], $matches[3], $matches[1])) {
+	        if (!preg_match($pattern, $value, $matches) || !checkdate($matches[$order[0]], $matches[$order[1]], $matches[$order[2]])) {
 	            self::$error = '<span>This value is not a valid date. </span>';
         		return false;
 	        }

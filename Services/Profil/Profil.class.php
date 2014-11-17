@@ -21,6 +21,7 @@ class Profil {
 	protected $fieldsTable;
 
 	protected $login;
+	protected $oldPwd;
 	protected $pwd;
 	protected $pwd2;
 	protected $email;
@@ -31,7 +32,14 @@ class Profil {
 		$this->db = Db::init("user");
 	}
 
+	public static function isConnected() {
+		return !empty($_SESSION['user']['id']);
+	}
 
+	public static function disconnect() {
+		self::getErrorMessage('Vous êtes maintenant déconnecté.');
+		unset($_SESSION['user']);
+	}
 
 	// $post = $_POST
 	/**
@@ -118,7 +126,7 @@ class Profil {
 	}
 
 
-	protected function getErrorMessage($message) {
+	protected static function getErrorMessage($message) {
 		if(isset($_SESSION['message'])) $_SESSION["message"] .= $message;
 		else $_SESSION['message'] = $message;
 	}
@@ -133,7 +141,7 @@ class Profil {
 
 		// Joueur existe-t-il
 		if (!empty($user)) {var_dump($user);
-			$this->getErrorMessage('Ce login est déja utilisé.');
+			self::getErrorMessage('Ce login est déja utilisé.');
 			return false;
 		}
 
@@ -145,7 +153,7 @@ class Profil {
 
 		// Joueur existe-t-il
 		if (!empty($user)) {
-			$this->getErrorMessage('Cet email est déja utilisé.');
+			self::getErrorMessage('Cet email est déja utilisé.');
 			return false;
 		}
 
@@ -160,7 +168,7 @@ class Profil {
 	 */
 	protected function checkSamePassword($post) {
 		if($post['pwd'] != $this->pwd2) {
-			$this->getErrorMessage('Mots de passe différents.');
+			self::getErrorMessage('Mots de passe différents.');
 			return false;
 		}
 
@@ -177,7 +185,7 @@ class Profil {
 		if ($this->avatar && $this->getUserTableField('avatar') && $_FILES['avatar']['name'] != '') {
 			$this->avatar = ConvertImg::init($this->login, array(200,200))->convertJPG('avatar',AVATARS);
 			if (!$this->avatar) {
-				$this->getErrorMessage('Une erreur s\'est produite lors de l\'enregistrement de votre image.');
+				self::getErrorMessage('Une erreur s\'est produite lors de l\'enregistrement de votre image.');
 				return false;
 			}
 		}
@@ -230,12 +238,23 @@ class Profil {
 	 * @global $config
 	 * @return BOL
 	 */
-	private function send_mail() {
+	private function send_mail($type = 'subscribe') {
+		switch ($type) {
+			case 'forgotPwd':
+				$frenchName = 'Mot de passe oublié';
+				break;
+			
+			default:
+				$frenchName = 'Inscription';
+				break;
+		}
+
 		$response = Conf::$response;
 		$confServer = Conf::getServer()->getConf();
 
 		$response['login'] = $this->login;
 		$response['pwd'] = $this->pwd2;
+
 		if ($this->activationCode !== null) {
 			$urlConfirm = Conf::getConstants()->getConf()['URL_CONFIRM_INS'];
 			$response['url'] = $urlConfirm . "?log=" . $this->login . "&code=" . $this->activationCode;
@@ -243,8 +262,8 @@ class Profil {
 		}
 		
 		$destinataire = $this->email;
-		$sujet = 'Inscription sur "'.$confServer['name'].'"';
-		$message = array($response, 'inscription');
+		$sujet = $frenchName . ' sur "'.$confServer['name'].'"';
+		$message = array($response, $type);
 		$headers = array($confServer['name'], Conf::getEmails()->getConf()['webmaster'][0]);
 
 		return Mails::init('html')->sendMail($destinataire,$sujet,$message,$headers);
@@ -262,12 +281,12 @@ class Profil {
 		$saveDb = $this->saveUserEntity();
 		
 		// ENVOI D'EMAIL
-		$sendMail = $this->send_mail();
+		$sendMail = $this->send_mail('subscribe');
 
 		if ($saveDb && $sendMail){
 			return TRUE;
 		}else {
-			$this->getErrorMessage('Une erreur s\'est produite lors de votre inscription.');
+			self::getErrorMessage('Une erreur s\'est produite lors de votre inscription.');
 			return FALSE;
 		}
 	}
@@ -288,7 +307,7 @@ class Profil {
 
 		// Joueur existe-t-il
 		if ($user === null || empty($code) || $user[$activateField] != $code) {
-			$this->getErrorMessage('Les informations données ne correspondent pas à votre inscription.');
+			self::getErrorMessage('Les informations données ne correspondent pas à votre inscription.');
 			return false;
 		}
 
@@ -311,20 +330,20 @@ class Profil {
 
 		if ($user === null) {
 			$userTableEmail = $this->getUserTableField('email');
-			$this->db->addRule($userTableEmail, $login);
+			$this->db->addRule($userTableEmail, $post['login']);
 			$model = Model::init($this->db);
 			$user = $model->getValues();
 			$user = array_shift($user);
 		}
 
 		if ($user === null) {
-			$this->getErrorMessage('Login ou mot de passe incorrect.');
+			self::getErrorMessage('Login ou mot de passe incorrect.');
 			return false;
 		}
 
 		$activateField = $this->getUserTableField('activate');
 		if ($activateField !== null && $user[$activateField] != 1) {
-			$this->getErrorMessage('Veuillez tout d\'abord activer votre compte.');
+			self::getErrorMessage('Veuillez tout d\'abord activer votre compte.');
 			return false;
 		}
 
@@ -334,11 +353,88 @@ class Profil {
 		$mdp2 = Encryptor::decode($user[$userTablePwd]);
 
 		if($mdp != $mdp2) {
-			$this->getErrorMessage('Login ou mot de passe incorrect.');
+			self::getErrorMessage('Login ou mot de passe incorrect.');
 			return false;
 		}
 
-		$_SESSION['user'] = $user;
+		$_SESSION['user']['id'] = $user[$this->getUserTableField('id')];
+		$_SESSION['user']['name'] = $user[$this->getUserTableField('name')];
+		$_SESSION['user']['email'] = $user[$this->getUserTableField('email')];
+		return true;
+	}
+
+
+
+	public function update($post){
+
+		// set fieldsTable
+		$this->formatFieldsTable();
+
+		// Recherche du nom dans la table user
+		$userTableId = $this->getUserTableField('id');
+		$this->db->addRule($userTableId, $_SESSION['user']['id']);
+		$model = Model::init($this->db);
+		$user = $model->getValues();
+
+		$user = array_shift($user);
+		if ($user === false) {
+			self::getErrorMessage('Une erreur est survenue.');
+			return false;
+		}
+		
+		$fields = array_keys($post);
+		foreach ($post as $key => $value) {
+			$this->$key = $value;
+		}
+
+		if (in_array('login', $fields) && $this->login != '' && $this->login != $user[$this->getUserTableField('name')]) {
+			$user[$this->getUserTableField('name')] = $this->login;
+		}
+
+		if (in_array('email', $fields) && $this->email != '' && $this->email != $user[$this->getUserTableField('email')]) {
+			// Recherche de l'email dans la table user
+			$userTableEmail = $this->getUserTableField('email');
+			$this->db->addRule($userTableEmail, $this->email);
+			$model2 = Model::init($this->db);
+			$user2 = $model2->getValues();
+
+			// Email existe-t-il
+			if (empty($user2)) {
+				$user[$this->getUserTableField('email')] = $this->email;
+			} else {
+				self::getErrorMessage('Email déja associé à un autre compte.');
+				return false;
+			}
+		}
+
+		if (in_array('oldPwd', $fields) && $this->pwd != '' && $this->checkSamePassword($post)) {
+			$userTablePwd = $this->getUserTableField('pwd');
+			$mdp = Encryptor::crypt($this->oldPwd);
+			$mdp2 = Encryptor::decode($user[$userTablePwd]);
+			
+			if ($mdp == $mdp2) {
+				$user[$userTablePwd] = $this->formatPwd($this->pwd);
+			} else {
+				self::getErrorMessage('Le mot de passe ne correspond pas.');
+				return false;
+			}
+		} elseif (in_array('oldPwd', $fields) && !$this->checkSamePassword($post)) {
+			self::getErrorMessage('Les deux mots de passe ne sont pas identiques.');
+			return false;
+		}
+
+		if (in_array('avatar', $fields) && !empty($this->avatar) && $this->savePicture()) {
+			$user[$this->getUserTableField('avatar')] = $this->formatAvatar($this->avatar);
+		}
+
+		if (!$model->setValues($user)->save()) {
+			self::getErrorMessage('une erreur est survenue lors de la modification de votre profil.');
+			return false;
+		}
+		
+		$_SESSION['user']['id'] = $user[$this->getUserTableField('id')];
+		$_SESSION['user']['name'] = $user[$this->getUserTableField('name')];
+		$_SESSION['user']['email'] = $user[$this->getUserTableField('email')];
 		return true;
 	}
 
@@ -347,271 +443,50 @@ class Profil {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	public function forgot_pwd($post) {
+		// set fieldsTable
+		$this->formatFieldsTable();
 
-		// Initialisation du profil
-		$profil = ProfilModel::init();
+		$userTableEmail = $this->getUserTableField('email');
+		$this->db->addRule($userTableEmail, $post['email']);
+		$model = Model::init($this->db);
+		$user = $model->getValues();
+		$user = array_shift($user);
+		
+		if ($user === null) {
+			self::getErrorMessage('email incorrect.');
+			return false;
+		}
 
-		// Infos Joueur
-		$result = $profil->infosPlayer($post["login"])->getValues();
+  		// Creation d'un nouveau mot de passe
+  		$newPwd = Encryptor::newPwd();
 
-		// Si l'email ne correspond pas a la source
-	  	if(empty($result) || $result[0]["jou_email"] != $post["email"]) return false;
+		$userTablePwd = $this->getUserTableField('pwd');
+		$user[$userTablePwd] = $newPwd['encodePwd'];
 
-	  	else {
-	  		// Creation d'un nouveau mot de passe
-	  		$newPwd = Encryptor::newPwd();
-
-			/*MODIFICATION MDP*/
-			$result2 = $profil->setPlayer([$newPwd['encodePwd']], ['jou_mdp'], $result[0]['jou_id']);
-
-			$response = Conf::$response;
-
-			$response['login'] = $post["login"];
-			$response['pwd'] = $newPwd['newPwd'];
-
-
-			/*ENVOI D'EMAIL*/
-			$destinataire = $result[0]["jou_email"];
-			$sujet = 'Modification du mot de passe sur "'.Conf::$server['name'].'"';
-			$message = array($response, 'forgotPwd');
-			$headers = array(Conf::$server['name'], Conf::$emails['webmaster'][0]);
-
-			if (Mails::init('html')->sendMail($destinataire,$sujet,$message,$headers) === TRUE && $result2){
-				return TRUE;
-			}else {
-				return FALSE;
+		// Enregistrement en BD
+		if (!$model->setValues($user)->save()) {
+			self::getErrorMessage('une erreur est survenue lors de l\'envoi de l\'email 1.');
+			return false;
+		} else {
+			$userTableLogin = $this->getUserTableField('name');
+			if ($userTableLogin === null) {
+				$userTableLogin = $this->getUserTableField('email');
 			}
-
-
-
-	  	}
-
-	  	
-
-
-	}
-
-
-
-
-
-
-
-
-	public function deconnect(){
-
-		$bdd = new BDD();
-			$id_joueur = $_SESSION["joueur"]["jou_id"];
-
-		/*MODIFICATION TABLE VERIF_CONNECTIONS*/
-			$sql = "UPDATE verif_connections SET vec_deconnect = CURRENT_TIMESTAMP WHERE vec_deconnect IS NULL AND vec_joueurs_id = ? ";
-
-		    $bind = "i";
-		  	$arr = array($id_joueur);
-		  
-		  	$bdd->prepare($sql,$bind);
-		  	$result1 = $bdd->execute($arr);
-	
-		/*SUPPRESSION JOUEUR dans TABLE CONNECTES*/
-			$sql = "DELETE FROM connectes WHERE con_joueurs_id = ? ";
-
-		    $bind = "i";
-		  	$arr = array($id_joueur);
-		  
-		  	$bdd->prepare($sql,$bind);
-		  	$result2 = $bdd->execute($arr);
-
-
-			unset($_SESSION["joueur"]);
-			unset($_SESSION["partie"]);
-
-			$_SESSION["message"] = "Vous êtes Deconnecté.";
-
-	}
-
-
-
-
-
-
-
-	public function verif_connect(){
-		if(isset($_SESSION["joueur"])) $id_joueur = $_SESSION["joueur"]["jou_id"];
-		else header("location:".URL_ACCUEIL);
-
-		/*CHERCHE INFO DE CONNEXION*/
-		$bdd = new BDD();
-			$sql = "SELECT con_id FROM connectes WHERE con_joueurs_id = ? ";
-
-		    $bind = "i";
-		  	$arr = array($id_joueur);
-		  
-		  	$bdd->prepare($sql,$bind);
-		  	$result = $bdd->execute($arr);
-	
-		  	if(empty($result)) header("location:".URL_ACCUEIL);
-	}
-
-
-
-
-
-
-
-	public function update_profil($type,$post=array()){
-
-
-		switch ($type) {
-			case 'avatar':
-				$this->post["login"] = $_SESSION["joueur"]["jou_login"];
-				// FICHIERS
-				$fichier_final = "";
-				if ($_FILES["avatar"]["name"] != "") {
-					// Traiter le fichier envoyé
-					
-					$erreur = "";
-					$taille_maxi = 8000000;
-					$taille = filesize($_FILES['avatar']['tmp_name']);
-					/** Poids <8Mo **/
-					if($taille>$taille_maxi) {
-						$erreur .= 'Le fichier est trop gros'.ini_get('post_max_size').' Maximum.<br>';
-						$_SESSION['message'] = $erreur;
-						$fichier_final = "avatarDefault.png";
-					}
-
-					/** Type = Image **/
-					if (strpos (  $_FILES['avatar']['type'] ,  'image' )!= FALSE){
-						$erreur .= 'Le type de fichier n\'est pas pris en compte ou le fichier est corrompu.<br>';
-						$_SESSION['message'] = $erreur;
-						$fichier_final = "avatarDefault.png";
-					}
-					 
-					// Envoi les erreurs ou alors converti l'image envoyé par l'utilisateur
-					if ($erreur !== "") {
-						$_SESSION['message'] = $erreur;
-						$fichier_final = "avatarDefault.png";
-					} else {
-					    $fichier_final = $this->convertJPG($_FILES['avatar']['tmp_name'],AVATARS);
-					}
-					
-				} else {
-					$fichier_final = "avatarDefault.png";
-				} 
-
-
-				$update = $fichier_final;
-				$_SESSION["joueur"]["jou_avatar"] = $update;
-
-				break;
+			$this->login =  $user[$userTableLogin];
 			
-			case 'mdp':
+			$this->pwd2 = $newPwd['newPwd'];
+			$this->email = $this->getUserTableField('email');
 
-
-	  			$mdp = $this->algo ($post["mdpOld"]);
-				$mdp2 = $this->decode($_SESSION["joueur"]["jou_mdp"]);
-
-
-				if($mdp == $mdp2) {
-					$mdp_final = $this->code ($this->algo ($post["mdpNew"]));
-					if(isset($_SESSION["message"])) $_SESSION["message"] .= "Le mot de passe a été modifié. C'est maintenant : ".$post["mdpNew"];
-					else $_SESSION["message"] = "Le mot de passe a été modifié. C'est maintenant : ".$post["mdpNew"];
-				}
-				
-				else {
-					$mdp_final = $_SESSION["joueur"]["jou_mdp"];
-					if(isset($_SESSION["message"])) $_SESSION["message"] .= "Le mot de passe n'a pas été modifé";
-					else $_SESSION["message"] = "Le mot de passe n'a pas été modifé";
-				}
-
-
-
-
-				$update = $mdp_final;
-				$_SESSION["joueur"]["jou_mdp"] = $update;
-
-				break;
-
-
-			case 'email':
-
-
-	  			$email = $post["emailOld"];
-				$email2 = $_SESSION["joueur"]["jou_email"];
-
-				if($email == $email2) {
-					$email_final = $post["emailNew"];
-					if(isset($_SESSION["message"])) $_SESSION["message"] .= "L'email a été modifié. C'est maintenant : ".$post["emailNew"];
-					else $_SESSION["message"] = "L'email a été modifié. C'est maintenant : ".$post["emailNew"];
-				}
-				
-				else {
-					$email_final = $_SESSION["joueur"]["jou_email"];
-					if(isset($_SESSION["message"])) $_SESSION["message"] .= "L'email n'a pas été modifé";
-					else $_SESSION["message"] = "L'email n'a pas été modifé";
-				}
-
-				$update = $email_final;
-				$_SESSION["joueur"]["jou_email"] = $update;
-
-				break;
-
-
-			default:
-				$type = false;
-				break;
+			// Envoi d'email
+			if (!$this->send_mail('forgotPwd')) {
+				self::getErrorMessage('une erreur est survenue lors de l\'envoi de l\'email 2.');
+				return false;
+			}
 		}
 
-
-		if($type != false) {
-			$jou_id = $_SESSION["joueur"]["jou_id"];
-			$bdd = new BDD();
-
-
-			$sql = "UPDATE joueurs SET jou_$type = ? WHERE jou_id = ? ";
-
-		    $bind = "si";
-		  	$arr = array($update,$jou_id);
-		  
-		  	$bdd->prepare($sql,$bind);
-		  	$result = $bdd->execute($arr);
-
-		}
-
-
-
-
+		return true;
 	}
-
-
-
-
-
-
-	
-
-
-
-
-
-
 
 
 }
