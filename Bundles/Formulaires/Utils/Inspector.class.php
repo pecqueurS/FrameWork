@@ -401,6 +401,8 @@ class Inspector {
 	        if (!preg_match($pattern, $value, $matches) || !checkdate($matches[$order[0]], $matches[$order[1]], $matches[$order[2]])) {
 	            self::$error = '<span>This value is not a valid date. </span>';
         		return false;
+	        } else {
+	        	return true;
 	        }
 	    }
     }
