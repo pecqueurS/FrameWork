@@ -66,7 +66,7 @@ class Conf {
 
 		} catch (Exception $e) {
 			header("HTTP/1.1 404 Not Found");
-  			echo file_get_contents(__DIR__."error/404.html"); 
+  			echo file_get_contents(__DIR__."/error/404.html"); 
   			var_dump($e);
   			exit();
 		}
@@ -129,7 +129,7 @@ class Conf {
 	private function checkServer() {
 		self::$server = new ConfEntity();
 		foreach ($this->config->getServeurs() as $os) {
-			if ($_SERVER['SERVER_NAME']==$os["host"]) {
+			if ($_SERVER['SERVER_NAME'] == $os["host"] || $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] == $os["host"]) {
 				self::$server->addConf($os);
 				self::$server->setValue('href', $os["protocole"] . '://' . $os['host'] . '/');
 				return true;
