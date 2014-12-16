@@ -75,7 +75,13 @@ class FrontController {
 			$this->controller = new $class();
 			$response = call_user_func_array(array($this->controller, $method), Conf::getRoute()->getVars());
 			
-			$this->response = array_merge($this->response, $response);
+			$responseType = Conf::getRoute()->getResponseType();
+			if ($responseType === 'JSON') {
+				$this->response = (object) $response;
+			} else {
+				$this->response = array_merge($this->response, $response);
+			}
+			
 			
 		} else {
 			$this->notFound();
@@ -144,7 +150,15 @@ class FrontController {
 
 	private function callTpl() {
 		// Affiche la vue
-		echo Tpl::display($this->response, "/App/" . Conf::getAppName() . "/Views/Twig_Tpl");
+		$responseType = Conf::getRoute()->getResponseType();
+		if ($responseType === false || $responseType === 'TWIG') {
+			$response = Tpl::display($this->response, "/App/" . Conf::getAppName() . "/Views/Twig_Tpl");
+		} elseif ($responseType === 'JSON') {
+			$response = json_encode($this->response);
+		} else {
+			throw new \Exception("Erreur de sortie de fichier, '$responseType' n'est pas correct.", 1);
+		}
+		echo $response;
 	}
 }
 

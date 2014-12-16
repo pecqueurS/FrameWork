@@ -140,7 +140,6 @@ Abstract class ErrorHandling {
 			$err .= "\n";
 		}
 
-		// sauvegarde type LOG
 		error_log($err, 3, dirname(__DIR__).self::$filePath."php_error.log");
     }
 
