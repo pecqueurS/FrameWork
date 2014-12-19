@@ -32,7 +32,7 @@ $loader->registerNamespaces(array(
     //'Controllers'               => dirname(dirname(__DIR__)),
     'Models'                    => dirname(dirname(__DIR__)),
 
-    'WishList'                  => dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'App',
+    $appName                    => dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'App',
     
        
 ));

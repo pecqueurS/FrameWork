@@ -4,13 +4,14 @@ use Bundles\Bdd\Db;
 use Bundles\Parametres\Conf;
 use Bundles\FrontController\FrontController;
 
+$appName = 'Mab';
 
 // Inclus l'autoloader
 require_once ("../Bundles/autoloader/autoloader.php");
 
 $confFiles = array(
-		"app" => "WishList/Conf/app.json",
-		"routing" => "WishList/Conf/Routing/routing.json",
+		"app" => "$appName/Conf/app.json",
+		"routing" => "$appName/Conf/Routing/routing.json",
 );
 Conf::init($confFiles);
 
