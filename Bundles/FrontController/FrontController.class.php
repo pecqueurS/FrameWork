@@ -6,12 +6,13 @@ namespace Bundles\FrontController;
 use Bundles\Parametres\Conf;
 use Bundles\Templates\Tpl;
 use Bundles\Translate\Dico;
+use Bundles\Geolocalisation\GeoLoc;
 
 class FrontController {
 
 	protected $precall = array (
 		'response' => array('Session', 'Urls'),
-		'calls' => array('Dico')
+		'calls' => array('GeoLoc', 'Dico')
 	);
 
 	protected $postcall = array (
@@ -52,7 +53,7 @@ class FrontController {
 
 
 	private function checkRoute() {
-		if(Conf::getRoute() !== false) { 
+		if(Conf::getRoute() !== false) {
 			self::$page = (Conf::getRoute()->getLoadUrl() !== false) ? substr(Conf::getRoute()->getLoadUrl(),1) : substr(Conf::getRoute()->getUrl(),1) ;
 		} else {
 			$this->notFound();
@@ -145,6 +146,11 @@ class FrontController {
 	private function callDico() {
 		// Initialisation du Dictionnaire
 		Dico::init(Conf::getTranslateType());
+	}
+
+
+	private function callGeoLoc() {
+		GeoLoc::init();
 	}
 
 

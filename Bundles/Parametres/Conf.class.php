@@ -27,6 +27,8 @@ class Conf {
 
 	private static $translateType = 'bdd';
 
+	private static $saveGeoLocalisation = false;
+
 	public static $response = array();
 
 	public function __construct($files) {
@@ -152,8 +154,9 @@ class Conf {
 		}
 		
 		// Enregistre les informations de la route en cours
-		foreach ($this->config->getRouting() as $route) { 
-			$url = '/^\\' . $route["url"] . '$/';
+		foreach ($this->config->getRouting() as $route) {
+			$urlAddSlash = str_replace('/', '\\/', $route["url"]);
+			$url = '/^' . $urlAddSlash . '$/';
 			$urlMatch = preg_match($url, $_SERVER['REQUEST_URI']);
 			if ($urlMatch) {
 				preg_match_all('/\([^)]*\)/', $route["url"], $matches);
